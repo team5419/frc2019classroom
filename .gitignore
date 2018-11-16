@@ -1,8 +1,11 @@
+*.iml
 .DS_Store
 .classpath
 .gradle/
+.idea
 .project
 .settings/
+.tox/
 .vscode/
 bin/
 build/
