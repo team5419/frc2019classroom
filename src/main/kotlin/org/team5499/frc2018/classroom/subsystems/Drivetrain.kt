@@ -1,4 +1,4 @@
-package frc.team5499.frc2018.classroom.subsystems
+package org.team5499.frc2018.classroom.subsystems
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
