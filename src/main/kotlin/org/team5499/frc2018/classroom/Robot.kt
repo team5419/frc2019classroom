@@ -20,6 +20,9 @@
 package org.team5499.frc2018.classroom
 
 import edu.wpi.first.wpilibj.TimedRobot // this is the base class of our Robot class, and takes care of calling the periodic and init functions
+// import org.team5499.frc2018.classroom.Constants
+// import org.team5499.frc2018.classroom.utils.Utils
+// import org.team5499.frc2018.classroom.subsystems.Drivetrain
 
 class Robot : TimedRobot() {
     override fun robotInit() {
