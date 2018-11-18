@@ -18,6 +18,17 @@ object Constants {
         const val TALON_UPDATE_PERIOD_MS: Int = 5
     }
 
+    object Gyro {
+        const val GYRO_PORT_NUMBER: Int = 10
+        const val TURN_UNITS_PER_ROTATION: Int = 3600
+        const val PIGEON_UNITS_PER_ROTATION: Int = 8192
+    }
+
+    object Input {
+        const val DRIVER_PORT: Int = 1
+        const val CODRIVER_PORT: Int = 2
+    }
+
     const val ENCODER_TICKS_PER_ROTATION = 1024 // the number of encoder ticks per rotation of the wheels
     const val WHEEL_DIAMETER = 6.0 // inches
     const val WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI // inches
