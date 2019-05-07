@@ -240,9 +240,10 @@ class Drivetrain(
 
     private var mGyroOffset = Rotation2d()
 
+    @get:Synchronized @set:Synchronized
     override var heading: Rotation2d
-        @Synchronized get() = Rotation2d.fromDegrees(mGyro.getFusedHeading()).rotateBy(mGyroOffset)
-        @Synchronized set(value) {
+        get() = Rotation2d.fromDegrees(mGyro.getFusedHeading()).rotateBy(mGyroOffset)
+        set(value) {
             println("SET HEADING: ${heading.degrees}")
             mGyroOffset = value.rotateBy(Rotation2d.fromDegrees(mGyro.getFusedHeading()).inverse())
             println("Gyro offset: ${mGyroOffset.degrees}")
