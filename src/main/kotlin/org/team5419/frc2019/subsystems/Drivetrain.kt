@@ -355,8 +355,26 @@ class Drivetrain(
 
     override fun setVelocity(left: Double, right: Double, leftVoltage: Double, rightVoltage: Double) {
         mDriveMode = DriveMode.VELOCITY
-        mLeftMaster.set(ControlMode.Velocity, left, DemandType.ArbitraryFeedForward, leftVoltage / kVolts)
-        mRightMaster.set(ControlMode.Velocity, right, DemandType.ArbitraryFeedForward, rightVoltage / kVolts)
+        mLeftMaster.set(
+            ControlMode.Velocity,
+            -Utils.inchesPerSecondToEncoderTicksPer100Ms(
+                Constants.Drivetrain.TICKS_PER_ROTATION,
+                Constants.Drivetrain.WHEEL_CIR,
+                left
+            ),
+            DemandType.ArbitraryFeedForward,
+            leftVoltage / kVolts
+        )
+        mRightMaster.set(
+            ControlMode.Velocity,
+            Utils.inchesPerSecondToEncoderTicksPer100Ms(
+                Constants.Drivetrain.TICKS_PER_ROTATION,
+                Constants.Drivetrain.WHEEL_CIR,
+                right
+            ),
+            DemandType.ArbitraryFeedForward,
+            rightVoltage / kVolts
+        )
     }
 
     private fun configureForPosition() {
@@ -366,8 +384,24 @@ class Drivetrain(
 
     override fun setPosition(leftDistance: Double, rightDistance: Double) {
         mDriveMode = DriveMode.POSITION
-        mLeftMaster.set(ControlMode.Position, leftDistance)
-        mRightMaster.set(ControlMode.Position, rightDistance)
+        // DO I NEED TO DO SOMETHING WITH CURRENT DISTANCE??
+        mLeftMaster.set(
+            ControlMode.Position,
+            // check negative sign
+            -Utils.inchesToEncoderTicks(
+                Constants.Drivetrain.TICKS_PER_ROTATION,
+                Constants.Drivetrain.WHEEL_CIR,
+                this.leftDistance + leftDistance
+            ).toDouble()
+        )
+        mRightMaster.set(
+            ControlMode.Position,
+            Utils.inchesToEncoderTicks(
+                Constants.Drivetrain.TICKS_PER_ROTATION,
+                Constants.Drivetrain.WHEEL_CIR,
+                this.rightDistance + rightDistance
+            ).toDouble()
+        )
     }
 
     private fun configureForTurn() {
@@ -376,21 +410,21 @@ class Drivetrain(
         mLeftMaster.follow(mRightMaster, FollowerType.AuxOutput1)
     }
 
-    override fun setTurn(degrees: Double, turnType: TurnType) {
+    override fun setTurn(degrees: Double, type: TurnType) {
         mDriveMode = DriveMode.TURN
         @Suppress("MagicNumber")
         mRightMaster.set(
-            ControlMode.PercentOutput, 0.0,
+            ControlMode.PercentOutput, 0.0, // MAYBE DO SOMTHING HERE
             DemandType.AuxPID, mRightMaster.getSelectedSensorPosition(1) + (degrees * 10.0)
         )
     }
 
     private fun configureForPercent() {}
 
-    override fun setPercent(leftPercent: Double, rightPercent: Double) {
+    override fun setPercent(left: Double, right: Double) {
         mDriveMode = DriveMode.PERCENT
-        mLeftMaster.set(ControlMode.PercentOutput, leftPercent)
-        mRightMaster.set(ControlMode.PercentOutput, rightPercent)
+        mLeftMaster.set(ControlMode.PercentOutput, left)
+        mRightMaster.set(ControlMode.PercentOutput, right)
     }
 
     @Suppress("LongMethod")
