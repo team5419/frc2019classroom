@@ -15,6 +15,8 @@ import org.team5499.monkeyLib.math.Position
 import org.team5499.monkeyLib.math.physics.DifferentialDrive
 import org.team5499.monkeyLib.math.physics.DCMotorTransmission
 import org.team5499.monkeyLib.util.Utils
+import org.team5499.monkeyLib.util.loops.ILooper
+import org.team5499.monkeyLib.util.loops.Loop
 
 import com.ctre.phoenix.sensors.PigeonIMU
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
@@ -27,6 +29,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.DemandType
 import com.ctre.phoenix.motorcontrol.FollowerType
 
+@Suppress("TooManyFunctions")
 class Drivetrain(
     private val mLeftMaster: LazyTalonSRX,
     private val mLeftSlave1: LazyVictorSPX,
@@ -162,6 +165,28 @@ class Drivetrain(
         // velocity measurement
         mLeftMaster.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_50Ms, Constants.CTRE_TIMEOUT_MS)
         mRightMaster.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_50Ms, Constants.CTRE_TIMEOUT_MS)
+
+        // load gains
+        loadGains()
+    }
+
+    private val mLoop = object : Loop {
+
+        override fun onStart(timestamp: Double) {
+        }
+
+        override fun onLoop(timestamp: Double) {
+            synchronized(this) {
+                mPositionTracker.update(leftDistance, rightDistance, heading.degrees)
+            }
+        }
+
+        override fun onStop(timestamp: Double) {
+            synchronized(this) {
+                mPositionTracker.reset()
+                stop()
+            }
+        }
     }
 
     private var mDriveMode: DriveMode = DriveMode.PERCENT
@@ -338,11 +363,59 @@ class Drivetrain(
         mRightMaster.set(ControlMode.PercentOutput, rightPercent)
     }
 
+    @Suppress("LongMethod")
+    public fun loadGains() {
+        // configure position slot
+        mLeftMaster.config_kP(kPositionSlot, Constants.Drivetrain.POSITION_KP, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kI(kPositionSlot, Constants.Drivetrain.POSITION_KI, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kD(kPositionSlot, Constants.Drivetrain.POSITION_KD, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kF(kPositionSlot, Constants.Drivetrain.POSITION_KF, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_IntegralZone(kPositionSlot, Constants.Drivetrain.IZONE, Constants.CTRE_TIMEOUT_MS)
+
+        mRightMaster.config_kP(kPositionSlot, Constants.Drivetrain.POSITION_KP, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kI(kPositionSlot, Constants.Drivetrain.POSITION_KI, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kD(kPositionSlot, Constants.Drivetrain.POSITION_KD, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kF(kPositionSlot, Constants.Drivetrain.POSITION_KF, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_IntegralZone(kPositionSlot, Constants.Drivetrain.IZONE, Constants.CTRE_TIMEOUT_MS)
+
+        // configure velocity slot
+        mLeftMaster.config_kP(kVelocitySlot, Constants.Drivetrain.VELOCITY_KP, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kI(kVelocitySlot, Constants.Drivetrain.VELOCITY_KI, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kD(kVelocitySlot, Constants.Drivetrain.VELOCITY_KD, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kF(kVelocitySlot, Constants.Drivetrain.VELOCITY_KF, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_IntegralZone(kVelocitySlot, Constants.Drivetrain.IZONE, Constants.CTRE_TIMEOUT_MS)
+
+        mRightMaster.config_kP(kVelocitySlot, Constants.Drivetrain.VELOCITY_KP, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kI(kVelocitySlot, Constants.Drivetrain.VELOCITY_KI, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kD(kVelocitySlot, Constants.Drivetrain.VELOCITY_KD, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kF(kVelocitySlot, Constants.Drivetrain.VELOCITY_KF, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_IntegralZone(kVelocitySlot, Constants.Drivetrain.IZONE, Constants.CTRE_TIMEOUT_MS)
+
+        // configure turn slot
+        mLeftMaster.config_kP(kTurnSlot, Constants.Drivetrain.TURN_KP, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kI(kTurnSlot, Constants.Drivetrain.TURN_KI, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kD(kTurnSlot, Constants.Drivetrain.TURN_KD, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_kF(kTurnSlot, Constants.Drivetrain.TURN_KF, Constants.CTRE_TIMEOUT_MS)
+        mLeftMaster.config_IntegralZone(kTurnSlot, Constants.Drivetrain.IZONE, Constants.CTRE_TIMEOUT_MS)
+
+        mRightMaster.config_kP(kTurnSlot, Constants.Drivetrain.TURN_KP, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kI(kTurnSlot, Constants.Drivetrain.TURN_KI, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kD(kTurnSlot, Constants.Drivetrain.TURN_KD, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_kF(kTurnSlot, Constants.Drivetrain.TURN_KF, Constants.CTRE_TIMEOUT_MS)
+        @Suppress("MagicNumber")
+        mRightMaster.config_IntegralZone(kTurnSlot, 400, Constants.CTRE_TIMEOUT_MS)
+    }
+
+    override fun registerLoops(looper: ILooper) = looper.register(mLoop)
+
     override fun zeroSensors() {
         leftDistance = 0.0
         rightDistance = 0.0
-        heading = Rotation2d()
     }
 
-    override fun stop() {}
+    override fun stop() {
+        setPercent(0.0)
+        mLeftMaster.neutralOutput()
+        mRightMaster.neutralOutput()
+    }
 }

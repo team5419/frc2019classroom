@@ -4,8 +4,20 @@ object Constants {
 
     const val CTRE_TIMEOUT_MS = 100
     const val SENSOR_FEEDBACK_MS = 5
+    const val LOOPER_PERIOD = 0.005
 
     object Drivetrain {
+
+        // ports
+        const val LEFT_MASTER_PORT = 1
+        const val LEFT_SLAVE1_PORT = 3
+        const val LEFT_SLAVE2_PORT = 4
+
+        const val RIGHT_MASTER_PORT = 5
+        const val RIGHT_SLAVE1_PORT = 6
+        const val RIGHT_SLAVE2_PORT = 7
+
+        const val GYRO_PORT = 8
 
         // pid constants
         const val POSITION_KP = 0.0
