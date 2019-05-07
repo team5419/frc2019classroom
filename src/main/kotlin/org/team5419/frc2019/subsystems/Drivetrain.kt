@@ -203,8 +203,7 @@ class Drivetrain(
             field = mode
         }
 
-    override val model by lazy {
-        DifferentialDrive(
+    override val model = DifferentialDrive(
             Constants.Drivetrain.MASS,
             Constants.Drivetrain.MOMENT_OF_INERTIA,
             Constants.Drivetrain.ANGULAR_DRAG,
@@ -221,7 +220,6 @@ class Drivetrain(
                 Constants.Drivetrain.FRICTION_VOLTAGE
             )
         )
-    }
 
     // hardware functions
     override var braking: Boolean = false
@@ -257,9 +255,10 @@ class Drivetrain(
 
     private val mPositionTracker = Position()
 
+    @get:Synchronized @set:Synchronized
     override var position: Vector2
-        @Synchronized get() = mPositionTracker.positionVector
-        @Synchronized private set(value) {
+        get() = mPositionTracker.positionVector
+        set(value) {
             mPositionTracker.positionVector = value
         }
 
@@ -270,13 +269,14 @@ class Drivetrain(
             position = value.translation
         }
 
+    @get:Synchronized @set:Synchronized
     override var leftDistance: Double
-        @Synchronized get() = -Utils.encoderTicksToInches(
+        get() = -Utils.encoderTicksToInches(
             Constants.Drivetrain.TICKS_PER_ROTATION,
             Constants.Drivetrain.WHEEL_CIR,
             mLeftMaster.getSelectedSensorPosition(kPositionSlot)
         )
-        @Synchronized set(inches) {
+        set(inches) {
             mLeftMaster.setSelectedSensorPosition(
                 Utils.inchesToEncoderTicks(
                     Constants.Drivetrain.TICKS_PER_ROTATION,
@@ -288,13 +288,14 @@ class Drivetrain(
             )
         }
 
+    @get:Synchronized @set:Synchronized
     override var rightDistance: Double
-        @Synchronized get() = Utils.encoderTicksToInches(
+        get() = Utils.encoderTicksToInches(
             Constants.Drivetrain.TICKS_PER_ROTATION,
             Constants.Drivetrain.WHEEL_CIR,
             mRightMaster.getSelectedSensorPosition(kPositionSlot)
         )
-        @Synchronized set(inches) {
+        set(inches) {
             mRightMaster.setSelectedSensorPosition(
                 Utils.inchesToEncoderTicks(
                     Constants.Drivetrain.TICKS_PER_ROTATION,
