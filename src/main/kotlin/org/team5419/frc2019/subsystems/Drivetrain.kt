@@ -222,6 +222,7 @@ class Drivetrain(
         )
 
     // hardware functions
+    @get:Synchronized @set:Synchronized
     override var braking: Boolean = false
         set(value) {
             if (value == field) return
@@ -235,6 +236,7 @@ class Drivetrain(
             mRightSlave2.setNeutralMode(mode)
             field = value
         }
+        get() = field
 
     private var mGyroOffset = Rotation2d()
 
