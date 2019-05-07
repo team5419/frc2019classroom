@@ -46,6 +46,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
 
+    compile 'org.team5499:monkey-lib:3.0.0-SNAPSHOT'
+
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
