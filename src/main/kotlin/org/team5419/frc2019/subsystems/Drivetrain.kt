@@ -246,7 +246,7 @@ class Drivetrain(
             println("Gyro offset: ${mGyroOffset.degrees}")
         }
 
-    val angularVelocity: Double
+    override val angularVelocity: Double
         get() {
             val xyz = doubleArrayOf(0.0, 0.0, 0.0)
             mGyro.getRawGyro(xyz)
@@ -268,7 +268,7 @@ class Drivetrain(
             position = value.translation
         }
 
-    var leftDistance: Double
+    override var leftDistance: Double
         get() = -Utils.encoderTicksToInches(
             Constants.Drivetrain.TICKS_PER_ROTATION,
             Constants.Drivetrain.WHEEL_CIR,
@@ -286,8 +286,8 @@ class Drivetrain(
             )
         }
 
-    var rightDistance: Double
-        get() = -Utils.encoderTicksToInches(
+    override var rightDistance: Double
+        get() = Utils.encoderTicksToInches(
             Constants.Drivetrain.TICKS_PER_ROTATION,
             Constants.Drivetrain.WHEEL_CIR,
             mRightMaster.getSelectedSensorPosition(kPositionSlot)
@@ -297,36 +297,66 @@ class Drivetrain(
                 Utils.inchesToEncoderTicks(
                     Constants.Drivetrain.TICKS_PER_ROTATION,
                     Constants.Drivetrain.WHEEL_CIR,
-                    -inches
+                    inches
                 ),
                 kPositionSlot,
                 Constants.CTRE_TIMEOUT_MS
             )
         }
 
-    val leftVelocity get() = -Utils.encoderTicksPer100MsToInchesPerSecond(
+    override val leftVelocity get() = -Utils.encoderTicksPer100MsToInchesPerSecond(
             Constants.Drivetrain.TICKS_PER_ROTATION,
             Constants.Drivetrain.WHEEL_CIR,
             mLeftMaster.getSelectedSensorVelocity(kVelocitySlot)
         )
 
-    val rightVelocity get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+    override val rightVelocity get() = Utils.encoderTicksPer100MsToInchesPerSecond(
         Constants.Drivetrain.TICKS_PER_ROTATION,
         Constants.Drivetrain. WHEEL_CIR,
         mRightMaster.getSelectedSensorVelocity(kVelocitySlot)
     )
 
-    val averageVelocity get() = (leftVelocity + rightVelocity) / 2.0
+    // error methods
+    override val leftDistanceError: Double
+        get() = -Utils.encoderTicksToInches(
+            Constants.Drivetrain.TICKS_PER_ROTATION,
+            Constants.Drivetrain.WHEEL_CIR,
+            mLeftMaster.getClosedLoopError(0)
+        )
+
+    override val rightDistanceError: Double
+        get() = Utils.encoderTicksToInches(
+            Constants.Drivetrain.TICKS_PER_ROTATION,
+            Constants.Drivetrain.WHEEL_CIR,
+            mRightMaster.getClosedLoopError(0)
+        )
+
+    override val leftVelocityError: Double
+        get() = -Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.Drivetrain.TICKS_PER_ROTATION,
+            Constants.Drivetrain. WHEEL_CIR,
+            mLeftMaster.getClosedLoopError(0)
+        )
+
+    override val rightVelocityError: Double
+        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
+            Constants.Drivetrain.TICKS_PER_ROTATION,
+            Constants.Drivetrain. WHEEL_CIR,
+            mRightMaster.getClosedLoopError(0)
+        )
+
+    override val turnError: Double
+        get() = mRightMaster.getClosedLoopError(1).toDouble() // CHECK THIS NOT SURE IF RIGHT
 
     private fun configureForVelocity() {
         mLeftMaster.selectProfileSlot(kVelocitySlot, 0)
         mRightMaster.selectProfileSlot(kVelocitySlot, 0)
     }
 
-    override fun setVelocity(leftIPS: Double, rightIPS: Double, leftVoltage: Double, rightVoltage: Double) {
+    override fun setVelocity(left: Double, right: Double, leftVoltage: Double, rightVoltage: Double) {
         mDriveMode = DriveMode.VELOCITY
-        mLeftMaster.set(ControlMode.Velocity, leftIPS, DemandType.ArbitraryFeedForward, leftVoltage / kVolts)
-        mRightMaster.set(ControlMode.Velocity, rightIPS, DemandType.ArbitraryFeedForward, rightVoltage / kVolts)
+        mLeftMaster.set(ControlMode.Velocity, left, DemandType.ArbitraryFeedForward, leftVoltage / kVolts)
+        mRightMaster.set(ControlMode.Velocity, right, DemandType.ArbitraryFeedForward, rightVoltage / kVolts)
     }
 
     private fun configureForPosition() {
@@ -334,10 +364,10 @@ class Drivetrain(
         mRightMaster.selectProfileSlot(kPositionSlot, 0)
     }
 
-    override fun setPosition(leftInches: Double, rightInches: Double) {
+    override fun setPosition(leftDistance: Double, rightDistance: Double) {
         mDriveMode = DriveMode.POSITION
-        mLeftMaster.set(ControlMode.Position, leftInches)
-        mRightMaster.set(ControlMode.Position, rightInches)
+        mLeftMaster.set(ControlMode.Position, leftDistance)
+        mRightMaster.set(ControlMode.Position, rightDistance)
     }
 
     private fun configureForTurn() {
