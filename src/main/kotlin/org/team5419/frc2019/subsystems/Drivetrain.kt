@@ -472,8 +472,7 @@ class Drivetrain(
         mRightMaster.config_kI(kTurnSlot, Constants.Drivetrain.TURN_KI, Constants.CTRE_TIMEOUT_MS)
         mRightMaster.config_kD(kTurnSlot, Constants.Drivetrain.TURN_KD, Constants.CTRE_TIMEOUT_MS)
         mRightMaster.config_kF(kTurnSlot, Constants.Drivetrain.TURN_KF, Constants.CTRE_TIMEOUT_MS)
-        @Suppress("MagicNumber")
-        mRightMaster.config_IntegralZone(kTurnSlot, 400, Constants.CTRE_TIMEOUT_MS)
+        mRightMaster.config_IntegralZone(kTurnSlot, Constants.Drivetrain.TURN_IZONE, Constants.CTRE_TIMEOUT_MS)
     }
 
     override fun registerLoops(looper: ILooper) = looper.register(mLoop)

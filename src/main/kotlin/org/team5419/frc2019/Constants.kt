@@ -35,6 +35,8 @@ object Constants {
         const val TURN_KD = 0.0
         const val TURN_KF = 0.0
 
+        const val TURN_IZONE = 400 // stolen from citrus
+
         const val IZONE = 0
 
         // model data (SI UNITS!!!!!!!!!!!!!!!!!!!!!)
@@ -51,7 +53,8 @@ object Constants {
         // control
         const val MOTION_MAGIC_VELOCITY = 2000
         const val MOTION_MAGIC_ACCELERATION = 2000
-        const val CLOSED_LOOP_RAMP = 0.0 // seconds
+
+        const val CLOSED_LOOP_RAMP = 0.0 // seconds from 0 to full
         const val ALLOWABLE_TURN_ERROR = 0
 
         // voltage comp
