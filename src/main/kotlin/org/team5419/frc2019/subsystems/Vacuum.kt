@@ -6,25 +6,25 @@ import org.team5419.fault.hardware.LazyTalonSRX
 import edu.wpi.first.wpilibj.Solenoid
 
 public class Vacuum(
-    private val mValve: LazyTalonSRX,
-    private val mPCM: Solenoid
+    private val mPump: LazyTalonSRX,
+    private val mSolenoid: Solenoid
 ) : Subsystem() {
-    public fun grap() {
-        mPCM.set(false) // turn PCM on
+    public fun grab() {
+        mPump.set(ControlMode.PercentOutput, 1.0) // turn pump on
+        mSolenoid.set(false) // turn valve off
     }
 
     public fun release() {
-        mPCM.set(true) // turn PCM off
+        mPump.set(ControlMode.PercentOutput, 0.0) // turn pump off
+        mSolenoid.set(true) // turn valve on
     }
 
     public override fun update() {
     }
 
     public override fun reset() {
-        mValve.set(ControlMode.PercentOutput, 1.0)
     }
 
     public override fun stop() {
-        mValve.set(ControlMode.PercentOutput, 0.0)
     }
 }
