@@ -1,70 +1,97 @@
 package org.team5419.frc2019
 
-object Constants {
+import org.team5499.monkeyLib.math.physics.DCMotorTransmission
+import org.team5499.monkeyLib.math.physics.DifferentialDrive
+import org.team5499.monkeyLib.math.units.derived.acceleration
+import org.team5499.monkeyLib.math.units.derived.velocity
+import org.team5499.monkeyLib.math.units.inch
+import org.team5499.monkeyLib.math.units.lb
 
-    const val CTRE_TIMEOUT_MS = 100
-    const val SENSOR_FEEDBACK_MS = 5
-    const val LOOPER_PERIOD = 0.005
+import org.team5499.monkeyLib.math.units.native.NativeUnitLengthModel
+import org.team5499.monkeyLib.math.units.native.nativeUnits
+import kotlin.math.PI
+import kotlin.math.pow
 
-    object Drivetrain {
+object RobotConstants {
+    val kRobotLength = 32.inch
+    val kRobotWidth = 27.5.inch
+    val kBumperThickness = 2.inch
+}
 
-        // ports
-        const val LEFT_MASTER_PORT = 1
-        const val LEFT_SLAVE1_PORT = 3
-        const val LEFT_SLAVE2_PORT = 4
+object DriveConstants {
 
-        const val RIGHT_MASTER_PORT = 5
-        const val RIGHT_SLAVE1_PORT = 6
-        const val RIGHT_SLAVE2_PORT = 7
+    // ports
+    const val kLeftMasterPort = 1
+    const val kLeftSlave1Port = 2
+    const val kLeftSlave2Port = 3
 
-        const val GYRO_PORT = 8
+    const val kRightMasterPort = 4
+    const val kRightSlave1Port = 5
+    const val kRightSlave2Port = 6
 
-        // pid constants
-        const val POSITION_KP = 0.0
-        const val POSITION_KI = 0.0
-        const val POSITION_KD = 0.0
-        const val POSITION_KF = 0.0
+    const val kGyroPort = 7
 
-        const val VELOCITY_KP = 0.0
-        const val VELOCITY_KI = 0.0
-        const val VELOCITY_KD = 0.0
-        const val VELOCITY_KF = 0.0
+    // misc
+    const val kEncoderPhase = true
 
-        const val TURN_KP = 0.0
-        const val TURN_KI = 0.0
-        const val TURN_KD = 0.0
-        const val TURN_KF = 0.0
+    // path following parameters
+    const val kBeta = 1.0 // m^-2
+    const val kZeta = 1.0 // unitless
 
-        const val TURN_IZONE = 400 // stolen from citrus
+    val kMotionMagicVelocity = 130.inch.velocity
+    val kMotionMagicAcceleration = 50.inch.acceleration
 
-        const val IZONE = 0
+    // dimensions and constants
+    val kWheelRadius = 3.inch
+    val kWheelDiameter = kWheelRadius * 2.0
+    val kWheelCir = kWheelDiameter * PI
 
-        // model data (SI UNITS!!!!!!!!!!!!!!!!!!!!!)
-        const val MASS = 0.0 // kg
-        const val MOMENT_OF_INERTIA = 0.0
-        const val ANGULAR_DRAG = 0.0
-        const val WHEEL_RADIUS_METERS = 0.0 // meters
-        const val EFFECTIVE_WHEELBASE_RADIUS = 0.0 // meters
+    val kTrackWidth = 20.inch
+    val kEffectiveWheelbaseRadius = kTrackWidth / 2.0
 
-        const val SPEED_PER_VOLT = 0.0 // m / s / volts
-        const val TORQUE_PER_VOLT = 0.0
-        const val FRICTION_VOLTAGE = 0.0 // volts
+    val kMass = 120.lb
+    val kMoi = 0.0 // kg * m^2
+    val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
-        // control
-        const val MOTION_MAGIC_VELOCITY = 2000
-        const val MOTION_MAGIC_ACCELERATION = 2000
 
-        const val CLOSED_LOOP_RAMP = 0.0 // seconds from 0 to full
-        const val ALLOWABLE_TURN_ERROR = 0
+    val kTicksPerRotation = 4096.nativeUnits
+    val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
-        // voltage comp
-        const val VOLTAGE_COMP_SATURATION = 12.0
-        const val VOLTAGE_COMP_FILTER = 32
 
-        // dimension
-        const val WHEEL_DIAMETER = 6.0 // inches
-        const val WHEEL_RADIUS = WHEEL_DIAMETER / 2.0
-        const val WHEEL_CIR = WHEEL_DIAMETER * Math.PI
-        const val TICKS_PER_ROTATION = 4096
-    }
+    const val kDriveKv = 0.0
+    const val kDriveKa = 0.0
+    const val kDriveKs = 0.0
+
+    val kLeftDriveGearbox = DCMotorTransmission(
+            1 / kDriveKv,
+            kWheelRadius.value.pow(2) * kMass.value / (2.0 * kDriveKa),
+            kDriveKs
+    )
+
+    val kRightDriveGearbox = DCMotorTransmission(
+            1 / kDriveKv,
+            kWheelRadius.value.pow(2) * kMass.value / (2.0 * kDriveKa),
+            kDriveKs
+    )
+
+    val kDriveModel = DifferentialDrive(
+            kMass.value,
+            kMoi,
+            kAngularDrag, // tune me
+            kWheelRadius.value,
+            kEffectiveWheelbaseRadius.value,
+            kLeftDriveGearbox,
+            kRightDriveGearbox
+    )
+
+    val kNativeGearboxConversion = NativeUnitLengthModel(
+            kTicksPerRotation,
+            kWheelRadius
+    )
+
+
+
+
+
+
 }
