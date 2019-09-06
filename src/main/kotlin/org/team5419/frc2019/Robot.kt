@@ -6,4 +6,8 @@ class Robot : TimedRobot() {
     override fun robotInit() {
         println("Hello World from Kotlin!")
     }
+    override fun robotPeriodic() {
+        
+    }
+
 }
