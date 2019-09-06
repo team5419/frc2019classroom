@@ -6,10 +6,10 @@ import org.team5419.fault.hardware.LazyVictorSPX
 
 public class DriveTrain(
     private val mLeftMaster: LazyTalonSRX,
-    private val mRightMaster: LazyTalonSRX,
-
     private val mLeftSlave1: LazyVictorSPX,
     private val mLeftSlave2: LazyVictorSPX,
+
+    private val mRightMaster: LazyTalonSRX,
     private val mRightSlave1: LazyVictorSPX,
     private val mRightSlave2: LazyVictorSPX
 ) : Subsystem() {
