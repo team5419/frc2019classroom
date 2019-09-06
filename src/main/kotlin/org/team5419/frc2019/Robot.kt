@@ -34,8 +34,6 @@ class Robot : TimedRobot() {
             mRightSlave1,
             mRightSlave2
 
-
-
         )
     }
 
