@@ -19,11 +19,13 @@ class SubsystemsManager(
             i.update()
         }
     }
+
     public fun stopAll() {
         for (i in mList) {
             i.stop()
         }
     }
+
     public fun resetAll() {
         for (i in mList) {
             i.reset()
