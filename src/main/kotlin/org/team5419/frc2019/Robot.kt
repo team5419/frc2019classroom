@@ -1,15 +1,16 @@
 package org.team5419.frc2019
 
 import edu.wpi.first.wpilibj.TimedRobot
+
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
 import org.team5419.frc2019.subsystems.DriveTrain
-import org.team5419.frc2019.subsystems.SubsystemsManager
-import org.team5419.frc2019.controllers.TeleopController
+import com.ctre.phoenix.motorcontrol.ControlMode
+
+import edu.wpi.first.wpilibj.XboxController
+import edu.wpi.first.wpilibj.GenericHID.Hand
 
 class Robot : TimedRobot() {
-
-    // hardware
 
     private val mLeftMaster: LazyTalonSRX
     private val mLeftSlave1: LazyVictorSPX
@@ -19,47 +20,18 @@ class Robot : TimedRobot() {
     private val mRightSlave1: LazyVictorSPX
     private val mRightSlave2: LazyVictorSPX
 
-    // subsystems
-
-    private val mDriveTrain: DriveTrain
-    private val mSubsystemsManager: SubsystemsManager
-
-    // controllers
-
-    private val mTeleopController: TeleopController
+    private val mXboxController: XboxController
 
     init {
-        // hardware init
+       mLeftMaster = LazyTalonSRX(Constants.DriveTrain.LEFT_MASTER_TALON_PORT)
+       mLeftSlave1 = LazyVictorSPX(Constants.DriveTrain.LEFT_SLAVE1_TALON_PORT)
+       mLeftSlave2 = LazyVictorSPX(Constants.DriveTrain.LEFT_SLAVE2_TALON_PORT)
 
-        mLeftMaster = LazyTalonSRX(Constants.DriveTrain.LEFT_MASTER_TALON_PORT)
-        mLeftSlave1 = LazyVictorSPX(Constants.DriveTrain.LEFT_SLAVE1_TALON_PORT)
-        mLeftSlave2 = LazyVictorSPX(Constants.DriveTrain.LEFT_SLAVE2_TALON_PORT)
+       mRightMaster = LazyTalonSRX(Constants.DriveTrain.RIGHT_MASTER_TALON_PORT)
+       mRightSlave1 = LazyVictorSPX(Constants.DriveTrain.RIGHT_SLAVE1_TALON_PORT)
+       mRightSlave2 = LazyVictorSPX(Constants.DriveTrain.RIGHT_SLAVE2_TALON_PORT)
 
-        mRightMaster = LazyTalonSRX(Constants.DriveTrain.RIGHT_MASTER_TALON_PORT)
-        mRightSlave1 = LazyVictorSPX(Constants.DriveTrain.RIGHT_SLAVE1_TALON_PORT)
-        mRightSlave2 = LazyVictorSPX(Constants.DriveTrain.RIGHT_SLAVE2_TALON_PORT)
-
-        // subsystems init
-
-        mDriveTrain = DriveTrain(
-            mLeftMaster,
-            mLeftSlave1,
-            mLeftSlave2,
-
-            mRightMaster,
-            mRightSlave1,
-            mRightSlave2
-        )
-
-        mSubsystemsManager = SubsystemsManager(
-            mDriveTrain
-        )
-
-        // controllers init
-
-        mTeleopController = TeleopController(
-            mSubsystemsManager
-        )
+       mXboxController = XboxController(Constants.Input.DRIVER_PORT)
     }
 
     override fun robotInit() {
@@ -75,11 +47,18 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
-        mTeleopController.start()
     }
 
     override fun teleopPeriodic() {
-        mTeleopController.update()
-        mSubsystemsManager.updateAll()
+
+        val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
+        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
+
+        mLeftMaster.set(ControlMode.PercentOutput, leftHand + rightHand)
+        mLeftSlave1.set(ControlMode.PercentOutput, leftHand + rightHand)
+        mLeftSlave2.set(ControlMode.PercentOutput, leftHand + rightHand)
+        mRightMaster.set(ControlMode.PercentOutput, leftHand - rightHand)
+        mRightSlave1.set(ControlMode.PercentOutput, leftHand - rightHand)
+        mRightSlave2.set(ControlMode.PercentOutput, leftHand - rightHand)
     }
 }
