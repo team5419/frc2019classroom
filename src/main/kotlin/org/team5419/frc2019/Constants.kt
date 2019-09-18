@@ -9,6 +9,10 @@ public object Constants {
 
         public const val RIGHT_MASTER_TALON_PORT = 12
         public const val RIGHT_SLAVE1_TALON_PORT = 2
-        public const val RIGHT_SLAVE2_TALON_PORT = 34
+        public const val RIGHT_SLAVE2_TALON_PORT = 3
+    }
+
+    object Input {
+        public const val DRIVER_PORT = 0
     }
 }

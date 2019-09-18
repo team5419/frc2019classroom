@@ -1,6 +1,7 @@
 package org.team5419.frc2019.subsystems
 
 import org.team5419.fault.Subsystem
+import com.ctre.phoenix.motorcontrol.ControlMode
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
 
@@ -29,5 +30,17 @@ public class DriveTrain(
     }
 
     public override fun stop() {
+    }
+
+    public fun setLeft(speed: Double) {
+        mLeftMaster.set(ControlMode.PercentOutput, speed)
+        mLeftSlave1.set(ControlMode.PercentOutput, speed)
+        mLeftSlave2.set(ControlMode.PercentOutput, speed)
+    }
+
+    public fun setRight(speed: Double) {
+        mRightMaster.set(ControlMode.PercentOutput, speed)
+        mRightSlave1.set(ControlMode.PercentOutput, speed)
+        mRightSlave2.set(ControlMode.PercentOutput, speed)
     }
 }
