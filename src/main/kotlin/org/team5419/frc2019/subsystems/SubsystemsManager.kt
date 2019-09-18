@@ -1,5 +1,4 @@
 package org.team5419.frc2019.subsystems
-
 import org.team5419.fault.Subsystem
 
 class SubsystemsManager(
