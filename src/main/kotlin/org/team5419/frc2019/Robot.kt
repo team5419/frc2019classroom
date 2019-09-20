@@ -61,14 +61,15 @@ class Robot : TimedRobot() {
         // val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.0
 
         val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getX(Hand.kRight) / -1
+        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
 
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand + rightHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand + rightHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand + rightHand)
-        mRightMaster.set(ControlMode.PercentOutput, leftHand - rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, leftHand - rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, leftHand - rightHand)
+        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
+        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
+        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
+
+        mRightMaster.set(ControlMode.PercentOutput, rightHand)
+        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
+        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
 
         // mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
         // mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
