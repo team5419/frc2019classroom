@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
+@SuppressWarnings("MagicNumber")
+
 class Robot : TimedRobot() {
 
     private val mLeftMaster: LazyTalonSRX
@@ -57,8 +59,8 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
 
-        // val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1.0
-        // val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.0
+        val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 4
+        val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 4
 
         val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
         val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
@@ -71,7 +73,7 @@ class Robot : TimedRobot() {
         mRightSlave1.set(ControlMode.PercentOutput, rightHand)
         mRightSlave2.set(ControlMode.PercentOutput, rightHand)
 
-        // mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
-        // mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
+        mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
+        mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
     }
 }
