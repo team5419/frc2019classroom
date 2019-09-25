@@ -26,7 +26,7 @@ class Robot : TimedRobot() {
 
     private val mXboxController: XboxController
 
-    private val mHighestPosition: Int = 100
+    private val initialPosition: Int
 
     init {
         // Left Wheel Motors
@@ -51,6 +51,7 @@ class Robot : TimedRobot() {
     }
 
     override fun robotInit() {
+        initialPosition = mChainBottom.getSelectedSensorPosition()
     }
 
     override fun robotPeriodic() {
