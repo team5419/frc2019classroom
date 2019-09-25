@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice
+
 @SuppressWarnings("MagicNumber")
 
 class Robot : TimedRobot() {
@@ -40,6 +42,8 @@ class Robot : TimedRobot() {
         mChainBottom = LazyTalonSRX(Constants.DriveTrain.CHAIN_BOTTOM_PORT)
 
         mXboxController = XboxController(Constants.Input.DRIVER_PORT)
+
+        mChainBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
     }
 
     override fun robotInit() {
@@ -59,11 +63,13 @@ class Robot : TimedRobot() {
 
     override fun teleopPeriodic() {
 
-        val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 4
-        val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 4
+        val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 2
+        val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 2
 
         val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
         val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
+
+        println(mChainBottom.getSelectedSensorPosition())
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHand)
         mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
