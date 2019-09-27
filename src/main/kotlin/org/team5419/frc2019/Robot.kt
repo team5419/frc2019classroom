@@ -88,7 +88,8 @@ class Robot : TimedRobot() {
         // val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
 
         var errorValue = preferredPosition - elevatorDist
-        var percentageOutput = Constants.PROPORTIONAL_ELEVATOR * errorValue
+        var percentageOutput = (Constants.PROPORTIONAL_ELEVATOR * errorValue) + (Constants.DERIVATIVE_ELEVATOR * convertToInches(mChainBottom.getSelectedSensorVelocity()))
+
         println(errorValue)
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHandY)
