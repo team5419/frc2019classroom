@@ -10,6 +10,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice
+
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
 
@@ -26,6 +28,10 @@ class Robot : TimedRobot() {
 
     private val mXboxController: XboxController
 
+    private val setPoint: Double
+
+    private val kP: Double
+
     init {
         mChainUp = LazyTalonSRX(4)
         mChainDown = LazyTalonSRX(5)
@@ -39,17 +45,35 @@ class Robot : TimedRobot() {
         mRightSlave2 = LazyVictorSPX(8)
 
         mXboxController = XboxController(0)
+
+        mChainUp.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+
+        setPoint = -10000.0
+        kP = .0001
     }
 
     override fun teleopPeriodic() {
         var lefthand: Double = mXboxController.getY(Hand.kLeft) / 1
         var righthand: Double = mXboxController.getY(Hand.kRight) / -1
 
-        var rightTrigger: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.5
-        var leftTrigger: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1.5
+        var ePosition: Double = mChainUp.getSelectedSensorPosition().toDouble()
 
-        mChainUp.set(ControlMode.PercentOutput, rightTrigger - leftTrigger)
-        mChainDown.set(ControlMode.PercentOutput, rightTrigger - leftTrigger)
+        var error: Double = ePosition - setPoint
+
+        var rightTrigger: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1
+        var leftTrigger: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1
+
+        var output = kP * error
+        if(output > 0.5) {
+            output = 0.5
+        } else if(output < -0.5) {
+            output = -0.5
+        }
+
+        if (mXboxController.aButton) {
+            mChainUp.set(ControlMode.PercentOutput, kP * error)
+            mChainDown.set(ControlMode.PercentOutput, kP * error)
+        }
 
         mLeftMaster.set(ControlMode.PercentOutput, lefthand)
         mLeftSlave1.set(ControlMode.PercentOutput, lefthand)
@@ -58,5 +82,7 @@ class Robot : TimedRobot() {
         mRightMaster.set(ControlMode.PercentOutput, righthand)
         mRightSlave1.set(ControlMode.PercentOutput, righthand)
         mRightSlave2.set(ControlMode.PercentOutput, righthand)
+
+        println(error)
     }
 }
