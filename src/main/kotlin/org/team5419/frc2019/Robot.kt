@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
+// 4096 ticks is a rotation of the shaft
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
 
@@ -26,7 +27,9 @@ class Robot : TimedRobot() {
 
     private val mXboxController: XboxController
 
-    private val initialPosition: Int
+    private var initialPosition: Int
+    private var initialDistance: Double
+    private var preferredPosition: Double
 
     init {
         // Left Wheel Motors
@@ -48,10 +51,18 @@ class Robot : TimedRobot() {
 
         // Feedback Device Configuration
         mChainBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+
+        initialPosition = 0
+        initialDistance = 0.0
+        preferredPosition = 40.0
+    }
+
+    fun convertToInches(position: Int): Double {
+        val initialRotations: Double = (position / (Constants.GEAR_REDUCTION)) / Constants.TICKS_PER_ROTATION
+        return -2 * (Constants.PI * (Constants.SPROCKET_DIAMETER * initialRotations))
     }
 
     override fun robotInit() {
-        initialPosition = mChainBottom.getSelectedSensorPosition()
     }
 
     override fun robotPeriodic() {
@@ -64,15 +75,21 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+        initialPosition = mChainBottom.getSelectedSensorPosition()
+        initialDistance = convertToInches(initialPosition)
     }
 
     override fun teleopPeriodic() {
         val ePosition: Int = mChainBottom.getSelectedSensorPosition()
-        println(ePosition)
+        val elevatorDist: Double = convertToInches(ePosition)
 
-        val leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
+        var leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
         val leftHandX: Double = mXboxController.getX(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
+        // val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
+
+        var errorValue = preferredPosition - elevatorDist
+        var percentageOutput = Constants.PROPORTIONAL_ELEVATOR * errorValue
+        println(errorValue)
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHandY)
         mLeftSlave1.set(ControlMode.PercentOutput, leftHandY)
@@ -82,7 +99,7 @@ class Robot : TimedRobot() {
         mRightSlave1.set(ControlMode.PercentOutput, leftHandX)
         mRightSlave2.set(ControlMode.PercentOutput, leftHandX)
 
-        mChainLift.set(ControlMode.PercentOutput, rightHand)
-        mChainBottom.set(ControlMode.PercentOutput, rightHand)
+        mChainLift.set(ControlMode.PercentOutput, percentageOutput)
+        mChainBottom.set(ControlMode.PercentOutput, percentageOutput)
     }
 }
