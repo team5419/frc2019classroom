@@ -9,10 +9,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
+import edu.wpi.first.wpilibj.Timer
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 
-@SuppressWarnings("MagicNumber", "ComplexMethod")
+@SuppressWarnings("MagicNumber", "ComplexMethod", "LongMethod")
 
 class Robot : TimedRobot() {
 
@@ -38,6 +39,12 @@ class Robot : TimedRobot() {
     public var listPIDs: Array<Int> = arrayOf(0, 10, 20, 30)
 
     public var currentPIDIndex: Int = 0
+
+    public var totalErrors: Double = 0.0
+
+    public var previousError: Double = 0.0
+
+    public var mTimer = Timer()
 
     init {
         mLeftMaster = LazyTalonSRX(Constants.DriveTrain.LEFT_MASTER_TALON_PORT)
@@ -76,46 +83,46 @@ class Robot : TimedRobot() {
 
     override fun teleopInit() {
         startingRotations = convert(mChainBottom.getSelectedSensorPosition())
+        mTimer.start()
     }
 
     override fun teleopPeriodic() {
 
+        var frameVal: Double = mTimer.get()
+        mTimer.reset()
+
         var total: Double = convert(mChainBottom.getSelectedSensorPosition()) - startingRotations
+
+        var error = listPIDs[currentPIDIndex] - total
 
         var chainUp: Double = 0.0
 
         if (mXboxController.getPOV() >= 315 || mXboxController.getPOV() < 45) {
             currentPIDIndex = 0
+            totalErrors = 0.0
             chainOn = true
         }
         if (mXboxController.getPOV() >= 45 && mXboxController.getPOV() < 135) {
             currentPIDIndex = 1
+            totalErrors = 0.0
             chainOn = true
         }
         if (mXboxController.getPOV() >= 135 && mXboxController.getPOV() < 225) {
             currentPIDIndex = 2
+            totalErrors = 0.0
             chainOn = true
         }
         if (mXboxController.getPOV() >= 225 && mXboxController.getPOV() < 315) {
             currentPIDIndex = 3
+            totalErrors = 0.0
             chainOn = true
         }
 
         var kP: Double = 0.2
 
         if (chainOn == true) {
-            if (total < listPIDs[currentPIDIndex]) {
+            if (total > listPIDs[currentPIDIndex] || total < listPIDs[currentPIDIndex]) {
                 chainUp = (listPIDs[currentPIDIndex] - total) * kP
-
-                if (chainUp > .5) {
-                    chainUp = .5
-                }
-            } else if (total > listPIDs[currentPIDIndex]) {
-                chainUp = (listPIDs[currentPIDIndex] - total) * kP
-
-                if (chainUp < -.5) {
-                    chainUp = -.5
-                }
             } else {
                 chainUp = 0.0
                 chainOn = false
@@ -125,7 +132,16 @@ class Robot : TimedRobot() {
         val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
         val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
 
-        println(chainOn)
+        chainUp += (0.000001 * totalErrors)
+        chainUp += (.01 * ((error - previousError) / frameVal))
+
+        if (chainUp > 0.5) {
+            chainUp = 0.5
+        }
+
+        if (chainUp < -0.5) {
+            chainUp = -0.5
+        }
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHand)
         mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
@@ -137,5 +153,8 @@ class Robot : TimedRobot() {
 
         mChainLift.set(ControlMode.PercentOutput, chainUp)
         mChainBottom.set(ControlMode.PercentOutput, chainUp)
+
+        totalErrors += error
+        previousError = error
     }
 }
