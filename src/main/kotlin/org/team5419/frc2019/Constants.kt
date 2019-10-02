@@ -13,6 +13,10 @@ public object Constants {
 
         public const val CHAIN_LIFT_PORT = 5
         public const val CHAIN_BOTTOM_PORT = 4
+
+        public const val GEAR_REDUCTION = 38.0 / 24.0
+
+        public const val TICKS_PER_ROTATION = 4096
     }
 
     object Input {
