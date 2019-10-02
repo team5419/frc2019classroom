@@ -28,6 +28,8 @@ build:
     # LongParameterList: 1
     # style: 1
     # comments: 1
+  exclude-rules:
+    - 'MaxLineLength'
 
 processors:
   active: true
