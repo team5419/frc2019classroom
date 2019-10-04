@@ -10,9 +10,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
+import edu.wpi.first.wpilibj.Timer
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
 
-@SuppressWarnings("MagicNumber")
+@SuppressWarnings("MagicNumber", "ComplexMethod", "LongMethod")
 class Robot : TimedRobot() {
 
     private val mChainUp: LazyTalonSRX
@@ -32,6 +34,13 @@ class Robot : TimedRobot() {
 
     private val kP: Double
 
+    private var total: Double = 0.0
+
+    private var mTimer = Timer()
+    private var preError: Double = 0.0
+
+    private var startingPosition: Double = 0.0
+
     init {
         mChainUp = LazyTalonSRX(4)
         mChainDown = LazyTalonSRX(5)
@@ -48,31 +57,48 @@ class Robot : TimedRobot() {
 
         mChainUp.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
 
-        setPoint = -10000.0
+        setPoint = 10.0
         kP = .0001
     }
+    fun inchConvert(rotations: Int): Double {
+        val location: Double = (rotations / (38.0 / 24.0)) / 4096
+        return -2 * (3.141592 * (1.23 * location))
+    }
 
+    override fun teleopInit() {
+        startingPosition = inchConvert(mChainUp.getSelectedSensorPosition())
+        mTimer.start()
+    }
     override fun teleopPeriodic() {
+        var timeFrame: Double = mTimer.get()
+        mTimer.reset()
+
         var lefthand: Double = mXboxController.getY(Hand.kLeft) / 1
         var righthand: Double = mXboxController.getY(Hand.kRight) / -1
 
-        var ePosition: Double = mChainUp.getSelectedSensorPosition().toDouble()
+        var ePosition: Double = inchConvert(mChainUp.getSelectedSensorPosition()) - startingPosition
 
-        var error: Double = ePosition - setPoint
+        var error: Double = setPoint - ePosition
 
-        var rightTrigger: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1
-        var leftTrigger: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1
+        // var rightTrigger: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1
+        // var leftTrigger: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1
 
         var output = kP * error
-        if(output > 0.5) {
+
+        total += error
+
+        output += total * .0001
+        output += (.01 * (error - preError) / timeFrame)
+
+        if (output > 0.5) {
             output = 0.5
-        } else if(output < -0.5) {
+        } else if (output < -0.5) {
             output = -0.5
         }
 
-        if (mXboxController.aButton) {
-            mChainUp.set(ControlMode.PercentOutput, kP * error)
-            mChainDown.set(ControlMode.PercentOutput, kP * error)
+        if (mXboxController.aButtonPressed) {
+            mChainUp.set(ControlMode.PercentOutput, output)
+            mChainDown.set(ControlMode.PercentOutput, output)
         }
 
         mLeftMaster.set(ControlMode.PercentOutput, lefthand)
@@ -84,5 +110,6 @@ class Robot : TimedRobot() {
         mRightSlave2.set(ControlMode.PercentOutput, righthand)
 
         println(error)
+        preError = error
     }
 }
