@@ -67,11 +67,12 @@ class Robot : TimedRobot() {
         preferredPosition = 40.0
     }
 
-    fun convertToInches(position: Int): Double {
-        var initialRotations: Double
-        initialRotations = (position / (Constants.RobotValues.GEAR_REDUCTION))
-        initialRotations /= Constants.RobotValues.TICKS_PER_ROTATION
-        return -2 * (Constants.Math.PI * (Constants.RobotValues.SPROCKET_DIAMETER * initialRotations))
+    fun getTimeSinceLastStep(): Double {
+        mTimer.stop()
+        var re = mTimer.get()
+        mTimer.reset()
+        mTimer.start()
+        return re
     }
 
     override fun robotInit() {
@@ -88,19 +89,14 @@ class Robot : TimedRobot() {
 
     override fun teleopInit() {
         initialPosition = mChainBottom.getSelectedSensorPosition()
-        initialDistance = convertToInches(initialPosition)
+        initialDistance = UnitConverter.sensorPositionToInches(initialPosition)
     }
 
     override fun teleopPeriodic() {
-        // Timer Stuff
-        mTimer.stop()
-        var secondsSinceLastFrame = mTimer.get()
-        mTimer.reset()
-        mTimer.start()
+        var secondsSinceLastFrame = getTimeSinceLastStep()
 
-        // Position
         val ePosition: Int = mChainBottom.getSelectedSensorPosition()
-        val elevatorDist: Double = convertToInches(ePosition)
+        val elevatorDist: Double = UnitConverter.sensorPositionToInches(ePosition)
         var leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
         val leftHandX: Double = mXboxController.getX(Hand.kLeft) / 1
         // val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
