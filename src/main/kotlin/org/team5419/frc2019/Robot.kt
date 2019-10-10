@@ -32,7 +32,7 @@ class Robot : TimedRobot() {
 
     private var initialPosition: Int
     private var initialDistance: Double
-    private var previousPosition: Int
+    private var previousPosition: Double
     private var preferredPosition: Double
     private var integralError: Double
 
@@ -62,9 +62,9 @@ class Robot : TimedRobot() {
 
         initialPosition = 0
         initialDistance = 0.0
-        previousPosition = initialPosition
+        previousPosition = initialDistance
         integralError = 0.0
-        preferredPosition = 40.0
+        preferredPosition = 5.0
     }
 
     fun getTimeSinceLastStep(): Double {
@@ -92,9 +92,9 @@ class Robot : TimedRobot() {
         initialDistance = UnitConverter.sensorPositionToInches(initialPosition)
     }
 
+    @SuppressWarnings("LongMethod")
     override fun teleopPeriodic() {
         var secondsSinceLastFrame = getTimeSinceLastStep()
-
         val ePosition: Int = mChainBottom.getSelectedSensorPosition()
         val elevatorDist: Double = UnitConverter.sensorPositionToInches(ePosition)
         var leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
@@ -115,7 +115,9 @@ class Robot : TimedRobot() {
         mRightSlave2.set(ControlMode.PercentOutput, leftHandX)
         mChainLift.set(ControlMode.PercentOutput, percentageOutput)
         mChainBottom.set(ControlMode.PercentOutput, percentageOutput)
+        println(errorValue)
 
         integralError += errorValue
+        previousPosition = elevatorDist
     }
 }

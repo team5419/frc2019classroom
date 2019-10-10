@@ -13,8 +13,8 @@ public object Constants {
     }
 
     object PID {
-        public const val E_PROPORTIONAL = 0.07 // Proportional Elevator
-        public const val E_INTEGRAL = 0.000001 // Integral Elevator
-        public const val E_DERIVATIVE = 0.01 // Derivative Elevator
+        public const val E_PROPORTIONAL = 0.14 // Proportional Elevator
+        public const val E_INTEGRAL = 0.0 // Integral Elevator
+        public const val E_DERIVATIVE = 0.0 // Derivative Elevator
     }
 }

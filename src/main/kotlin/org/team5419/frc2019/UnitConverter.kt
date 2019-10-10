@@ -1,5 +1,7 @@
 package org.team5419.frc2019
 
+import org.team5419.frc2019.maths.MathFunctions
+
 @SuppressWarnings("MagicNumber")
 public object UnitConverter {
     fun sensorPositionToInches(sensorPosition: Int): Double {
@@ -13,6 +15,6 @@ public object UnitConverter {
         e /= Constants.Math.PI
         e /= Constants.RobotValues.SPROCKET_DIAMETER
         e *= Constants.RobotValues.TICKS_PER_ROTATION
-        return round(e * Constants.RobotValues.GEAR_REDUCTION).toInt()
+        return MathFunctions.roundToDecimal(e * Constants.RobotValues.GEAR_REDUCTION, 0).toInt()
     }
 }
