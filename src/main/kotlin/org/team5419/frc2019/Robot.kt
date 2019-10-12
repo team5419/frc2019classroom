@@ -99,7 +99,6 @@ class Robot : TimedRobot() {
         val elevatorDist: Double = UnitConverter.sensorPositionToInches(ePosition)
         var leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
         val leftHandX: Double = mXboxController.getX(Hand.kLeft) / 1
-        // val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
 
         val velocity: Double = (elevatorDist - previousPosition) / secondsSinceLastFrame
         var errorValue = preferredPosition - elevatorDist
