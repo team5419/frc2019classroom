@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.TimedRobot
 
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
+import org.team5419.fault.hardware.PS4Controller
+
 import com.ctre.phoenix.motorcontrol.ControlMode
 
 import edu.wpi.first.wpilibj.XboxController
@@ -20,7 +22,7 @@ class Robot : TimedRobot() {
     private val mRightSlave1: LazyVictorSPX
     private val mRightSlave2: LazyVictorSPX
 
-    private val mXboxController: XboxController
+    private val mPS4Controller: PS4Controller
 
     init {
         mLeftMaster = LazyTalonSRX(12)
@@ -31,7 +33,41 @@ class Robot : TimedRobot() {
         mRightSlave1 = LazyVictorSPX(7)
         mRightSlave2 = LazyVictorSPX(8)
 
-        mXboxController = XboxController(0)
+        mPS4Controller = PS4Controller(0)
+    }
+
+    fun testButtonPressed() {
+        if (mPS4Controller.getXButtonPressed()) { println("X Button Pressed") }
+        if (mPS4Controller.getOButtonPressed()) { println("O Button Pressed") }
+        if (mPS4Controller.getTriangleButtonPressed()) { println("Triangle Button Pressed") }
+        if (mPS4Controller.getSquareButtonPressed()) { println("Square Button Pressed") }
+        if (mPS4Controller.getBumperPressed(Hand.kLeft)) { println("Left Bumper Pressed") }
+        if (mPS4Controller.getBumperPressed(Hand.kRight)) { println("Right Bumper Pressed") }
+        if (mPS4Controller.getTriggerPressed(Hand.kLeft)) { println("Left Trigger Pressed") }
+        if (mPS4Controller.getTriggerPressed(Hand.kRight)) { println("Right Trigger Pressed") }
+        if (mPS4Controller.getShareButtonPressed()) { println("Share Button Pressed") }
+        if (mPS4Controller.getOptionsButtonPressed()) { println("Options Button Pressed") }
+        if (mPS4Controller.getStickButtonPressed(Hand.kLeft)) { println("Left Stick Pressed") }
+        if (mPS4Controller.getStickButtonPressed(Hand.kRight)) { println("Right Stick Pressed") }
+        if (mPS4Controller.getHomeButtonPressed()) { println("Home Button Pressed") }
+        if (mPS4Controller.getTouchPadPressed()) { println("Touch Pad Pressed") }
+    }
+
+    fun testButtonReleased() {
+        if (mPS4Controller.getXButtonReleased()) { println("X Button Released") }
+        if (mPS4Controller.getOButtonReleased()) { println("O Button Released") }
+        if (mPS4Controller.getTriangleButtonReleased()) { println("Triangle Button Released") }
+        if (mPS4Controller.getSquareButtonReleased()) { println("Square Button Released") }
+        if (mPS4Controller.getBumperReleased(Hand.kLeft)) { println("Left Bumper Released") }
+        if (mPS4Controller.getBumperReleased(Hand.kRight)) { println("Right Bumper Released") }
+        if (mPS4Controller.getTriggerReleased(Hand.kLeft)) { println("Left Trigger Released") }
+        if (mPS4Controller.getTriggerReleased(Hand.kRight)) { println("Right Trigger Released") }
+        if (mPS4Controller.getShareButtonReleased()) { println("Share Button Released") }
+        if (mPS4Controller.getOptionsButtonReleased()) { println("Options Button Released") }
+        if (mPS4Controller.getStickButtonReleased(Hand.kLeft)) { println("Left Stick Released") }
+        if (mPS4Controller.getStickButtonReleased(Hand.kRight)) { println("Right Stick Released") }
+        if (mPS4Controller.getHomeButtonReleased()) { println("Home Button Released") }
+        if (mPS4Controller.getTouchPadReleased()) { println("Touch Pad Released") }
     }
 
     override fun robotInit() {
@@ -50,22 +86,6 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopPeriodic() {
-
-        // val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1.0
-        // val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.0
-
-        val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
-
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
-
-        mRightMaster.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
-
-        // mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
-        // mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
+        testButtonPressed()
     }
 }
