@@ -6,12 +6,9 @@ import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
 import org.team5419.fault.hardware.PS4Controller
 
-import com.ctre.phoenix.motorcontrol.ControlMode
-
-import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 
-@SuppressWarnings("MagicNumber")
+@SuppressWarnings("MagicNumber", "ComplexMethod")
 class Robot : TimedRobot() {
 
     private val mLeftMaster: LazyTalonSRX
@@ -33,7 +30,7 @@ class Robot : TimedRobot() {
         mRightSlave1 = LazyVictorSPX(7)
         mRightSlave2 = LazyVictorSPX(8)
 
-        mPS4Controller = PS4Controller(0)
+        mPS4Controller = PS4Controller(1)
     }
 
     fun testButtonPressed() {
@@ -86,6 +83,6 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopPeriodic() {
-        testButtonPressed()
+        testButtonReleased()
     }
 }
