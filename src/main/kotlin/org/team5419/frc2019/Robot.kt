@@ -1,13 +1,15 @@
 package org.team5419.frc2019
 
-import edu.wpi.first.wpilibj.TimedRobot
+import org.team5419.frc2019.AutoController
+import org.team5419.frc2019.Drivetrain
 
+import org.team5419.fault.auto.Routine
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
-import com.ctre.phoenix.motorcontrol.ControlMode
 
-import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj.GenericHID.Hand
+import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.sensors.PigeonIMU
+import edu.wpi.first.wpilibj.TimedRobot
 
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
@@ -20,18 +22,37 @@ class Robot : TimedRobot() {
     private val mRightSlave1: LazyVictorSPX
     private val mRightSlave2: LazyVictorSPX
 
-    private val mXboxController: XboxController
+    private val mGyro: PigeonIMU 
+
+    private val mRoutine: Routine
+    private val mDrivetrain: Drivetrain
+    private val mAutoController: AutoController
 
     init {
-        mLeftMaster = LazyTalonSRX(12)
-        mLeftSlave1 = LazyVictorSPX(2)
-        mLeftSlave2 = LazyVictorSPX(3)
+        mLeftMaster = LazyTalonSRX(6)
+        mLeftSlave1 = LazyVictorSPX(7)
+        mLeftSlave2 = LazyVictorSPX(8)
+        mRightMaster = LazyTalonSRX(12)
+        mRightSlave1 = LazyVictorSPX(2)
+        mRightSlave2 = LazyVictorSPX(3)
+        mGyro = PigeonIMU(13)
 
-        mRightMaster = LazyTalonSRX(6)
-        mRightSlave1 = LazyVictorSPX(7)
-        mRightSlave2 = LazyVictorSPX(8)
+        mDrivetrain = Drivetrain(
+            mLeftMaster,
+            mLeftSlave1,
+            mLeftSlave2,
+            mRightMaster,
+            mRightSlave1,
+            mRightSlave2,
+            mGyro
+        )
 
-        mXboxController = XboxController(0)
+        mRoutine = Routine(
+            "Routine"
+        )
+
+        mAutoController = AutoController(mRoutine, mDrivetrain)
+
     }
 
     override fun robotInit() {
@@ -46,26 +67,11 @@ class Robot : TimedRobot() {
     override fun disabledPeriodic() {
     }
 
-    override fun teleopInit() {
+    override fun autonomousInit() {
+
     }
 
-    override fun teleopPeriodic() {
+    override fun autonomousPeriodic() {
 
-        // val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1.0
-        // val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.0
-
-        val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
-
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
-
-        mRightMaster.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
-
-        // mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
-        // mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
     }
 }
