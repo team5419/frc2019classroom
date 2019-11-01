@@ -1,7 +1,9 @@
-package org.team5419.frc2019
+package org.team5419.frc2019classroom
 
-import org.team5419.frc2019.AutoController
-import org.team5419.frc2019.Drivetrain
+import org.team5419.frc2019classroom.AutoController
+import org.team5419.frc2019classroom.Drivetrain
+import org.team5419.frc2019classroom.actions.* 
+
 
 import org.team5419.fault.auto.Routine
 import org.team5419.fault.hardware.LazyTalonSRX
@@ -48,7 +50,8 @@ class Robot : TimedRobot() {
         )
 
         mRoutine = Routine(
-            "Routine"
+            "Routine",
+            DriveForwardAction(5.0, mDrivetrain)
         )
 
         mAutoController = AutoController(mRoutine, mDrivetrain)
@@ -59,6 +62,7 @@ class Robot : TimedRobot() {
     }
 
     override fun robotPeriodic() {
+        mDrivetrain.update()
     }
 
     override fun disabledInit() {
