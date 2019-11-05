@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame
 
 import org.team5499.frc2019.Constants
 
+import org.team5419.fault.subsystems.drivetrain.AbstractTankDrive
 import org.team5419.fault.Subsystem
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
@@ -24,6 +25,8 @@ import org.team5419.fault.math.geometry.Rotation2d
 import org.team5419.fault.math.geometry.Pose2d
 import org.team5419.fault.util.Utils
 import org.team5419.fault.input.DriveSignal
+import org.team5419.fault.input.DriveSignal
+
 
 @Suppress("LargeClass", "TooManyFunctions")
 public class Drivetrain(
@@ -34,7 +37,7 @@ public class Drivetrain(
     rightSlave1: LazyVictorSPX,
     rightSlave2: LazyVictorSPX,
     gyro: PigeonIMU
-) : Subsystem() {
+) : AbstractTankDrive() {
 
     private enum class DriveMode {
         OPEN_LOOP,
@@ -120,7 +123,7 @@ public class Drivetrain(
     public val pose: Pose2d
         get() = Pose2d(mPosition.positionVector, heading)
 
-    public var leftDistance: Double
+    override public var leftDistance: Double
         get() {
             return -Utils.encoderTicksToInches(
                 Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
@@ -135,7 +138,7 @@ public class Drivetrain(
                 inches), 0)
         }
 
-    public var rightDistance: Double
+    override public var rightDistance: Double
         get() {
             return Utils.encoderTicksToInches(
                 Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
@@ -151,6 +154,20 @@ public class Drivetrain(
                     inches
                 ), 0)
         }
+
+	override public var leftDistanceError: Double
+		get() = Utils.encoderTicksToInches(
+            Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
+            Constants.Drivetrain.WHEEL_CIR,
+            mLeftMaster.getClosedLoopError(0)
+        )
+
+	override public var rightDistanceError: Double
+		get() = Utils.encoderTicksToInches(
+            Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
+            Constants.Drivetrain.WHEEL_CIR,
+            mRightMaster.getClosedLoopError(0)
+        )
 
     public val leftVelocity: Double
         get() = -Utils.encoderTicksPer100MsToInchesPerSecond(

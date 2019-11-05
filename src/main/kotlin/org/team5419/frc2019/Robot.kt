@@ -6,6 +6,10 @@ import org.team5419.frc2019.Drivetrain
 import org.team5419.fault.auto.Routine
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
+import org.team5419.fault.auto.QuasistaticCharacterizationAction
+import org.team5419.fault.auto.StepVoltageCharacterizationAction
+
+
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.PigeonIMU
@@ -22,7 +26,7 @@ class Robot : TimedRobot() {
     private val mRightSlave1: LazyVictorSPX
     private val mRightSlave2: LazyVictorSPX
 
-    private val mGyro: PigeonIMU 
+    private val mGyro: PigeonIMU
 
     private val mRoutine: Routine
     private val mDrivetrain: Drivetrain
@@ -48,10 +52,15 @@ class Robot : TimedRobot() {
         )
 
         mRoutine = Routine(
-            "Routine"
+            "Routine",
+			QuasistaticCharacterizationAction(
+				mDrivetrain/*,
+				wheelRadius,
+				effectiveWheelbaseRadius*/
+			)
         )
 
-        mAutoController = AutoController(mRoutine, mDrivetrain)
+        mAutoController = AutoController(mRoutine)
 
     }
 
