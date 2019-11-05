@@ -186,27 +186,6 @@ public class Drivetrain(
     public val averageVelocity: Double
         get() = (leftVelocity + rightVelocity) / 2.0
 
-    public val positionError: Double
-        get() = Utils.encoderTicksToInches(
-            Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
-            Constants.Drivetrain.WHEEL_CIR,
-            mRightMaster.getClosedLoopError(0)
-        )
-
-    public val leftVelocityError: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
-            Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
-            Constants.Drivetrain.WHEEL_CIR,
-            mLeftMaster.getClosedLoopError(0)
-        )
-
-    public val rightVelocityError: Double
-        get() = Utils.encoderTicksPer100MsToInchesPerSecond(
-            Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
-            Constants.Drivetrain.WHEEL_CIR,
-            mRightMaster.getClosedLoopError(0)
-        )
-
     public val averageVelocityError: Double
         get() = (leftVelocityError + rightVelocityError) / 2.0
 
@@ -291,6 +270,8 @@ public class Drivetrain(
         )
         val angleTarget = mRightMaster.getSelectedSensorPosition(1)
         mRightMaster.set(ControlMode.MotionMagic, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())
+		/*mLeftMaster.set(ControlMode.MotionMagic, absDistance.toDouble(), DemandType.AuxPID, angleTarget.toDouble())*/
+
     }
 
     public fun setTurn(angle: Double) {
