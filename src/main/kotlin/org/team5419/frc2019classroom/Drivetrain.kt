@@ -15,24 +15,25 @@ import com.ctre.phoenix.motorcontrol.StatusFrame
 
 import org.team5419.frc2019classroom.Constants
 
-import org.team5419.fault.Subsystem
-import org.team5419.fault.hardware.LazyTalonSRX
-import org.team5419.fault.hardware.LazyVictorSPX
+import org.team5419.fault.subsystem.Subsystem
+import org.team5419.fault.hardware.ctre.BerkeliumSPX
+import org.team5419.fault.hardware.ctre.BerkeliumSRX
 import org.team5419.fault.math.Position
 import org.team5419.fault.math.geometry.Vector2
 import org.team5419.fault.math.geometry.Rotation2d
 import org.team5419.fault.math.geometry.Pose2d
+import org.team5419.fault.math.MathMisc
 import org.team5419.fault.util.Utils
 import org.team5419.fault.input.DriveSignal
 
 @Suppress("LargeClass", "TooManyFunctions")
 public class Drivetrain(
-    leftMaster: LazyTalonSRX,
-    leftSlave1: LazyVictorSPX,
-    leftSlave2: LazyVictorSPX,
-    rightMaster: LazyTalonSRX,
-    rightSlave1: LazyVictorSPX,
-    rightSlave2: LazyVictorSPX,
+    leftMaster: BerkeliumSPX,
+    leftSlave1: BerkeliumSPX,
+    leftSlave2: BerkeliumSPX,
+    rightMaster: BerkeliumSPX,
+    rightSlave1: BerkeliumSPX,
+    rightSlave2: BerkeliumSPX,
     gyro: PigeonIMU
 ) : Subsystem() {
 
@@ -44,13 +45,13 @@ public class Drivetrain(
     }
 
     // hardware
-    private val mLeftMaster: LazyTalonSRX
-    private val mLeftSlave1: LazyVictorSPX
-    private val mLeftSlave2: LazyVictorSPX
+    private val mLeftMaster: BerkeliumSPX
+    private val mLeftSlave1: BerkeliumSPX
+    private val mLeftSlave2: BerkeliumSPX
 
-    private val mRightMaster: LazyTalonSRX
-    private val mRightSlave1: LazyVictorSPX
-    private val mRightSlave2: LazyVictorSPX
+    private val mRightMaster: BerkeliumSPX
+    private val mRightSlave1: BerkeliumSPX
+    private val mRightSlave2: BerkeliumSPX
 
     private val mGyro: PigeonIMU
 
@@ -244,7 +245,7 @@ public class Drivetrain(
         this.brakeMode = brakeMode
     }
 
-    private fun setPosition(distance: Double) {
+    public fun setPosition(distance: Double) {
         // mDriveMode = DriveMode.POSITION
         val absDistance = Utils.inchesToEncoderTicks(
             Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
@@ -269,8 +270,8 @@ public class Drivetrain(
 
     private fun setVelocity(leftSpeed: Double, rightSpeed: Double) {
         // mDriveMode = DriveMode.VELOCITY
-        val left = Utils.limit(leftSpeed, Constants.Drivetrain.MAX_VELOCITY)
-        val right = Utils.limit(rightSpeed, Constants.Drivetrain.MAX_VELOCITY)
+        val left = MathMisc.limit(leftSpeed, Constants.Drivetrain.MAX_VELOCITY)
+        val right = MathMisc.limit(rightSpeed, Constants.Drivetrain.MAX_VELOCITY)
         mLeftMaster.set(ControlMode.Velocity,
             Utils.inchesPerSecondToEncoderTicksPer100Ms(
                 Constants.Drivetrain.ENCODER_TICKS_PER_ROTATION,
