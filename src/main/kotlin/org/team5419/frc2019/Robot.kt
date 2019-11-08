@@ -5,6 +5,7 @@ import org.team5419.fault.hardware.LazyVictorSPX
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.InvertType
 
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.XboxController
@@ -30,12 +31,6 @@ class Robot : TimedRobot() {
 
     private val mTimer: Timer
 
-    private var initialPosition: Int
-    private var initialDistance: Double
-    private var previousPosition: Double
-    private var preferredPosition: Double
-    private var integralError: Double
-
     init {
         // Left Wheel Motors
         mLeftMaster = LazyTalonSRX(12)
@@ -54,25 +49,59 @@ class Robot : TimedRobot() {
         // Xbox Controller
         mXboxController = XboxController(0)
 
-        // Feedback Device Configuration
-        mChainBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
-
         // Timer
         mTimer = Timer()
 
-        initialPosition = 0
-        initialDistance = 0.0
-        previousPosition = initialDistance
-        integralError = 0.0
-        preferredPosition = 5.0
-    }
+        // -- Feedback Device Configuration --\\
 
-    fun getTimeSinceLastStep(): Double {
-        mTimer.stop()
-        var re = mTimer.get()
-        mTimer.reset()
-        mTimer.start()
-        return re
+        // Bottom Chain
+        mChainBottom.apply {
+            configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+            config_kP(0, Constants.PID.E_KP, 0)
+            config_kI(0, Constants.PID.E_KI, 0)
+            config_kD(0, Constants.PID.E_KD, 0)
+            config_kF(0, Constants.PID.E_KF, 0)
+        }
+
+        // Left Side
+        mLeftMaster.apply {
+            setInverted(false)
+            configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+            config_kP(0, Constants.PID.L_KP, 0)
+            config_kI(0, Constants.PID.L_KI, 0)
+            config_kD(0, Constants.PID.L_KD, 0)
+            config_kF(0, Constants.PID.L_KF, 0)
+        }
+
+        mLeftSlave1.apply {
+            setInverted(InvertType.FollowMaster)
+            follow(mLeftMaster)
+        }
+
+        mLeftSlave2.apply {
+            setInverted(InvertType.FollowMaster)
+            follow(mLeftMaster)
+        }
+
+        // Right Side
+        mRightMaster.apply {
+            setInverted(true)
+            configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+            config_kP(0, Constants.PID.R_KP, 0)
+            config_kI(0, Constants.PID.R_KI, 0)
+            config_kD(0, Constants.PID.R_KD, 0)
+            config_kF(0, Constants.PID.R_KF, 0)
+        }
+
+        mRightSlave1.apply {
+            setInverted(InvertType.FollowMaster)
+            follow(mRightMaster)
+        }
+
+        mRightSlave2.apply {
+            setInverted(InvertType.FollowMaster)
+            follow(mRightMaster)
+        }
     }
 
     override fun robotInit() {
@@ -88,35 +117,20 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
-        initialPosition = mChainBottom.getSelectedSensorPosition()
-        initialDistance = UnitConverter.sensorPositionToInches(initialPosition)
     }
 
     @SuppressWarnings("LongMethod")
     override fun teleopPeriodic() {
-        var secondsSinceLastFrame = getTimeSinceLastStep()
-        val ePosition: Int = mChainBottom.getSelectedSensorPosition()
-        val elevatorDist: Double = UnitConverter.sensorPositionToInches(ePosition)
-        var leftHandY: Double = mXboxController.getY(Hand.kLeft) / 1
-        val leftHandX: Double = mXboxController.getX(Hand.kLeft) / 1
+        // -- Input --\\
+        var leftHand = mXboxController.getY(Hand.kLeft)
+        var rightHand = mXboxController.getY(Hand.kRight)
 
-        val velocity: Double = (elevatorDist - previousPosition) / secondsSinceLastFrame
-        var errorValue = preferredPosition - elevatorDist
-        var percentageOutput = (Constants.PID.E_PROPORTIONAL * errorValue) // P
-        percentageOutput += (Constants.PID.E_DERIVATIVE * velocity) // D
-        percentageOutput += (Constants.PID.E_INTEGRAL * integralError) // I
-
-        mLeftMaster.set(ControlMode.PercentOutput, leftHandY)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHandY)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHandY)
-        mRightMaster.set(ControlMode.PercentOutput, leftHandX)
-        mRightSlave1.set(ControlMode.PercentOutput, leftHandX)
-        mRightSlave2.set(ControlMode.PercentOutput, leftHandX)
-        mChainLift.set(ControlMode.PercentOutput, percentageOutput)
-        mChainBottom.set(ControlMode.PercentOutput, percentageOutput)
-        println(errorValue)
-
-        integralError += errorValue
-        previousPosition = elevatorDist
+        // -- Sets Motor Values --\\
+        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
+        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
+        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
+        mRightMaster.set(ControlMode.PercentOutput, rightHand)
+        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
+        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
     }
 }
