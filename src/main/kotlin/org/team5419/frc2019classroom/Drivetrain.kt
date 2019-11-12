@@ -15,9 +15,11 @@ import com.ctre.phoenix.motorcontrol.StatusFrame
 
 import org.team5419.frc2019classroom.Constants
 
-import org.team5419.fault.subsystem.Subsystem
+import org.team5419.fault.subsystems.Subsystem
 import org.team5419.fault.hardware.ctre.BerkeliumSPX
 import org.team5419.fault.hardware.ctre.BerkeliumSRX
+import org.team5419.fault.hardware.Limelight
+
 import org.team5419.fault.math.Position
 import org.team5419.fault.math.geometry.Vector2
 import org.team5419.fault.math.geometry.Rotation2d
@@ -71,7 +73,7 @@ public class Drivetrain(
 
     private val mPosition = Position()
 
-    private fun setPosition(vector: Vector2) {
+    public fun setPosition(vector: Vector2) {
         mPosition.positionVector = vector
     }
 

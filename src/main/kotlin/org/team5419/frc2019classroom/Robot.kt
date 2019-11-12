@@ -6,6 +6,8 @@ import org.team5419.frc2019classroom.Drivetrain
 import org.team5419.fault.auto.Routine
 import org.team5419.fault.hardware.ctre.BerkeliumSPX
 import org.team5419.fault.hardware.ctre.BerkeliumSRX
+import org.team5419.fault.auto.QuasistaticCharacterizationAction
+
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.sensors.PigeonIMU
@@ -14,11 +16,11 @@ import edu.wpi.first.wpilibj.TimedRobot
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
 
-    private val mLeftMaster: BerkeliumSPX
+    private val mLeftMaster: BerkeliumSRX
     private val mLeftSlave1: BerkeliumSPX
     private val mLeftSlave2: BerkeliumSPX
 
-    private val mRightMaster: BerkeliumSPX
+    private val mRightMaster: BerkeliumSRX
     private val mRightSlave1: BerkeliumSPX
     private val mRightSlave2: BerkeliumSPX
 
@@ -29,10 +31,10 @@ class Robot : TimedRobot() {
     private val mAutoController: AutoController
 
     init {
-        mLeftMaster = BerkeliumSPX(6)
+        mLeftMaster = BerkeliumSRX(6)
         mLeftSlave1 = BerkeliumSPX(7)
         mLeftSlave2 = BerkeliumSPX(8)
-        mRightMaster = BerkeliumSPX(12)
+        mRightMaster = BerkeliumSRX(12)
         mRightSlave1 = BerkeliumSPX(2)
         mRightSlave2 = BerkeliumSPX(3)
         mGyro = PigeonIMU(13)
@@ -49,7 +51,12 @@ class Robot : TimedRobot() {
 
         mRoutine = Routine(
             "Routine",
-            DriveForwardAction(5.0, mDrivetrain)
+            QuasistaticCharacterizationAction(
+                mDrivetrain,
+                2.0,
+                1.0,
+                1.0
+            )
         )
 
         mAutoController = AutoController(mRoutine, mDrivetrain)
@@ -64,9 +71,11 @@ class Robot : TimedRobot() {
     }
 
     override fun disabledInit() {
+        
     }
 
     override fun disabledPeriodic() {
+
     }
 
     override fun autonomousInit() {
