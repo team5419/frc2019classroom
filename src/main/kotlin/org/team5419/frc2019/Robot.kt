@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.TimedRobot
 import org.team5419.fault.hardware.LazyTalonSRX
 import org.team5419.fault.hardware.LazyVictorSPX
 import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.FeedbackDevice
 
 import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
@@ -22,6 +23,12 @@ class Robot : TimedRobot() {
 
     private val mXboxController: XboxController
 
+    private val mChainLift: LazyTalonSRX
+    private val mChainBottom: LazyTalonSRX
+
+    private var initialPosition: Int
+    private var initialDistance: Double
+
     init {
         mLeftMaster = LazyTalonSRX(12)
         mLeftSlave1 = LazyVictorSPX(2)
@@ -32,6 +39,20 @@ class Robot : TimedRobot() {
         mRightSlave2 = LazyVictorSPX(8)
 
         mXboxController = XboxController(0)
+
+        mChainLift = LazyTalonSRX(5)
+        mChainBottom = LazyTalonSRX(4)
+
+        mChainBottom.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
+
+        initialPosition = 0
+        initialDistance = 0.0
+    }
+
+    fun sensorPositionToInches(sensorPosition: Int): Double {
+        var initialRotations = sensorPosition / (38.0 / 24.0)
+        initialRotations /= 4096.0
+        return -2 * (Math.PI * (1.23 * initialRotations))
     }
 
     override fun robotInit() {
@@ -47,6 +68,9 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+
+        initialPosition = mChainBottom.getSelectedSensorPosition()
+        initialDistance = sensorPositionToInches(initialPosition)
     }
 
     override fun teleopPeriodic() {
@@ -60,5 +84,7 @@ class Robot : TimedRobot() {
         mRightMaster.set(ControlMode.PercentOutput, -leftHand - rightHand)
         mRightSlave1.set(ControlMode.PercentOutput, -leftHand - rightHand)
         mRightSlave2.set(ControlMode.PercentOutput, -leftHand - rightHand)
+
+        println(sensorPositionToInches(mChainBottom.getSelectedSensorPosition()) - initialDistance)
     }
 }
