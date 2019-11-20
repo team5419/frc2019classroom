@@ -31,6 +31,8 @@ class Robot : TimedRobot() {
 
     private val mTimer: Timer
 
+    private val mDistance: Int
+
     init {
         // Left Wheel Motors
         mLeftMaster = LazyTalonSRX(12)
@@ -52,6 +54,9 @@ class Robot : TimedRobot() {
         // Timer
         mTimer = Timer()
 
+        // Distance
+        mDistance = UnitConverter.inchesToSensorPosition(12.0)
+
         // -- Feedback Device Configuration --\\
 
         // Bottom Chain
@@ -67,10 +72,10 @@ class Robot : TimedRobot() {
         mLeftMaster.apply {
             setInverted(false)
             configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
-            config_kP(0, Constants.PID.L_KP, 0)
-            config_kI(0, Constants.PID.L_KI, 0)
-            config_kD(0, Constants.PID.L_KD, 0)
-            config_kF(0, Constants.PID.L_KF, 0)
+            config_kP(0, Constants.PID.DT_KP, 0)
+            config_kI(0, Constants.PID.DT_KI, 0)
+            config_kD(0, Constants.PID.DT_KD, 0)
+            config_kF(0, Constants.PID.DT_KF, 0)
         }
 
         mLeftSlave1.apply {
@@ -87,10 +92,10 @@ class Robot : TimedRobot() {
         mRightMaster.apply {
             setInverted(true)
             configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
-            config_kP(0, Constants.PID.R_KP, 0)
-            config_kI(0, Constants.PID.R_KI, 0)
-            config_kD(0, Constants.PID.R_KD, 0)
-            config_kF(0, Constants.PID.R_KF, 0)
+            config_kP(0, Constants.PID.DT_KP, 0)
+            config_kI(0, Constants.PID.DT_KI, 0)
+            config_kD(0, Constants.PID.DT_KD, 0)
+            config_kF(0, Constants.PID.DT_KF, 0)
         }
 
         mRightSlave1.apply {
@@ -117,6 +122,9 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopInit() {
+        // -- Sets Motor Values --\\
+        mLeftMaster.set(ControlMode.Position, mDistance.toDouble())
+        mRightMaster.set(ControlMode.Position, mDistance.toDouble())
     }
 
     @SuppressWarnings("LongMethod")
@@ -124,13 +132,5 @@ class Robot : TimedRobot() {
         // -- Input --\\
         var leftHand = mXboxController.getY(Hand.kLeft)
         var rightHand = mXboxController.getY(Hand.kRight)
-
-        // -- Sets Motor Values --\\
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
-        mRightMaster.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
     }
 }

@@ -18,14 +18,9 @@ public object Constants {
         public const val E_KD = 0.0 // Derivative Elevator
         public const val E_KF = 0.0 // [insert info here] Elevator
 
-        public const val L_KP = 0.14 // Proportional Left Slave
-        public const val L_KI = 0.0 // Integral Left Slave
-        public const val L_KD = 0.0 // Derivative Left Slave
-        public const val L_KF = 0.0 // [insert info here] Left Slave
-
-        public const val R_KP = 0.14 // Proportional Right Slave
-        public const val R_KI = 0.0 // Integral Right Slave
-        public const val R_KD = 0.0 // Derivative Right Slave
-        public const val R_KF = 0.0 // [insert info here] Right Slave
+        public const val DT_KP = 0.14 // Proportional DT
+        public const val DT_KI = 0.0 // Integral DT
+        public const val DT_KD = 0.0 // Derivative DT
+        public const val DT_KF = 0.0 // [insert info here] DT
     }
 }
