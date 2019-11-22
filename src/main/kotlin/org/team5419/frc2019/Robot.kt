@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.XboxController
 import edu.wpi.first.wpilibj.GenericHID.Hand
 import edu.wpi.first.wpilibj.Timer
 
-// 4096 ticks is a rotation of the shaft
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
 
