@@ -15,11 +15,9 @@ class Robot : TimedRobot() {
 
     private val mLeftMaster: LazyTalonSRX
     private val mLeftSlave1: LazyVictorSPX
-    private val mLeftSlave2: LazyVictorSPX
 
     private val mRightMaster: LazyTalonSRX
     private val mRightSlave1: LazyVictorSPX
-    private val mRightSlave2: LazyVictorSPX
 
     private val mXboxController: XboxController
 
@@ -30,13 +28,11 @@ class Robot : TimedRobot() {
     private var initialDistance: Double
 
     init {
-        mLeftMaster = LazyTalonSRX(12)
-        mLeftSlave1 = LazyVictorSPX(2)
-        mLeftSlave2 = LazyVictorSPX(3)
+        mLeftMaster = LazyTalonSRX(10)
+        mLeftSlave1 = LazyVictorSPX(8)
 
-        mRightMaster = LazyTalonSRX(6)
-        mRightSlave1 = LazyVictorSPX(7)
-        mRightSlave2 = LazyVictorSPX(8)
+        mRightMaster = LazyTalonSRX(9)
+        mRightSlave1 = LazyVictorSPX(12)
 
         mXboxController = XboxController(0)
 
@@ -79,11 +75,9 @@ class Robot : TimedRobot() {
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHand - rightHand)
         mLeftSlave1.set(ControlMode.PercentOutput, leftHand - rightHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand - rightHand)
 
         mRightMaster.set(ControlMode.PercentOutput, -leftHand - rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, -leftHand - rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, -leftHand - rightHand)
+        mRightSlave1.set(ControlMode.PercentOutput, leftHand + rightHand)
 
         println(sensorPositionToInches(mChainBottom.getSelectedSensorPosition()) - initialDistance)
     }
