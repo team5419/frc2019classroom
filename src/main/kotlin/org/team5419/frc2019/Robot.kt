@@ -50,22 +50,11 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopPeriodic() {
+        val leftHand: Double = mXboxController.getY(Hand.kLeft)
+        val rightHand: Double = mXboxController.getX(Hand.kLeft)
 
-        // val chainDown: Double = mXboxController.getTriggerAxis(Hand.kLeft) / 1.0
-        // val chainUp: Double = mXboxController.getTriggerAxis(Hand.kRight) / 1.0
+        mLeftMaster.set(ControlMode.PercentOutput, leftHand-rightHand)
 
-        val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
-
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave2.set(ControlMode.PercentOutput, leftHand)
-
-        mRightMaster.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave2.set(ControlMode.PercentOutput, rightHand)
-
-        // mChainLift.set(ControlMode.PercentOutput, chainUp - chainDown)
-        // mChainBottom.set(ControlMode.PercentOutput, chainUp - chainDown)
+        mRightMaster.set(ControlMode.PercentOutput, rightHand + leftHand)
     }
 }
