@@ -8,6 +8,22 @@ public object Constants {
         public const val GEAR_REDUCTION = 38.0 / 24.0
     }
 
+    object Ports {
+        // Left Motors
+        public const val LEFT_MASTER = 6
+        public const val LEFT_SLAVE_1 = 12
+        public const val LEFT_SLAVE_2 = 3
+
+        // Right Motors
+        public const val RIGHT_MASTER = 5
+        public const val RIGHT_SLAVE_1 = 4
+        public const val RIGHT_SLAVE_2 = 8
+
+        // Elevator Motors
+        public const val CHAIN_LIFT = 5
+        public const val CHAIN_BOTTOM = 4
+    }
+
     object Math {
         public const val PI = 3.141592
     }
