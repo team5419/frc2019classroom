@@ -132,9 +132,9 @@ class Robot : TimedRobot() {
         var leftHand = mXboxController.getY(Hand.kLeft)
         var rightHand = mXboxController.getY(Hand.kRight)
 
-        mLeftMaster.set(ControlMode.PercentOutput, leftHand)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand)
-        mRightMaster.set(ControlMode.PercentOutput, rightHand)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand)
+        mLeftMaster.set(ControlMode.PercentOutput, leftHand * 0.5)
+        mLeftSlave1.set(ControlMode.PercentOutput, leftHand * 0.5)
+        mRightMaster.set(ControlMode.PercentOutput, rightHand * 0.5)
+        mRightSlave1.set(ControlMode.PercentOutput, rightHand * 0.5)
     }
 }
