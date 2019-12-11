@@ -10,13 +10,13 @@ public object Constants {
 
     object Ports {
         // Left Motors
-        public const val LEFT_MASTER = 6
-        public const val LEFT_SLAVE_1 = 12
+        public const val LEFT_MASTER = 12
+        public const val LEFT_SLAVE_1 = 2
         public const val LEFT_SLAVE_2 = 3
 
         // Right Motors
-        public const val RIGHT_MASTER = 5
-        public const val RIGHT_SLAVE_1 = 4
+        public const val RIGHT_MASTER = 6
+        public const val RIGHT_SLAVE_1 = 7
         public const val RIGHT_SLAVE_2 = 8
 
         // Elevator Motors

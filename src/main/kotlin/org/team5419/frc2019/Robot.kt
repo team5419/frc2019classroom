@@ -1,48 +1,52 @@
 package org.team5419.frc2019
 
 import org.team5419.fault.hardware.LazyTalonSRX
+import org.team5419.fault.hardware.LazyVictorSPX
 
 import com.ctre.phoenix.motorcontrol.ControlMode
+import com.ctre.phoenix.motorcontrol.FeedbackDevice
+import com.ctre.phoenix.motorcontrol.InvertType
+import com.ctre.phoenix.motorcontrol.NeutralMode
 
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.XboxController
-import edu.wpi.first.wpilibj.GenericHID.Hand
 import edu.wpi.first.wpilibj.Timer
+import edu.wpi.first.wpilibj.GenericHID.Hand
 
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
 
     private val mLeftMaster: LazyTalonSRX
-    private val mLeftSlave1: LazyTalonSRX
-    // private val mLeftSlave2: LazyVictorSPX
+    private val mLeftSlave1: LazyVictorSPX
+    private val mLeftSlave2: LazyVictorSPX
 
     private val mRightMaster: LazyTalonSRX
-    private val mRightSlave1: LazyTalonSRX
-    // private val mRightSlave2: LazyVictorSPX
+    private val mRightSlave1: LazyVictorSPX
+    private val mRightSlave2: LazyVictorSPX
 
-    // private val mChainLift: LazyTalonSRX
-    // private val mChainBottom: LazyTalonSRX
+    private val mChainLift: LazyTalonSRX
+    private val mChainBottom: LazyTalonSRX
 
     private val mXboxController: XboxController
 
     private val mTimer: Timer
 
-    // private val mDistance: Int
+    private val mDistance: Int
 
     init {
         // Left Wheel Motors
         mLeftMaster = LazyTalonSRX(Constants.Ports.LEFT_MASTER)
-        mLeftSlave1 = LazyTalonSRX(Constants.Ports.LEFT_SLAVE_1)
-        // mLeftSlave2 = LazyVictorSPX(Constants.Ports.LEFT_SLAVE_2)
+        mLeftSlave1 = LazyVictorSPX(Constants.Ports.LEFT_SLAVE_1)
+        mLeftSlave2 = LazyVictorSPX(Constants.Ports.LEFT_SLAVE_2)
 
         // Right Wheel Motors
         mRightMaster = LazyTalonSRX(Constants.Ports.RIGHT_MASTER)
-        mRightSlave1 = LazyTalonSRX(Constants.Ports.RIGHT_SLAVE_1)
-        // mRightSlave2 = LazyVictorSPX(Constants.Ports.RIGHT_SLAVE_2)
+        mRightSlave1 = LazyVictorSPX(Constants.Ports.RIGHT_SLAVE_1)
+        mRightSlave2 = LazyVictorSPX(Constants.Ports.RIGHT_SLAVE_2)
 
         // Elevator Motors
-        // mChainLift = LazyTalonSRX(Constants.Ports.CHAIN_LIFT)
-        // mChainBottom = LazyTalonSRX(Constants.Ports.CHAIN_BOTTOM)
+        mChainLift = LazyTalonSRX(Constants.Ports.CHAIN_LIFT)
+        mChainBottom = LazyTalonSRX(Constants.Ports.CHAIN_BOTTOM)
 
         // Xbox Controller
         mXboxController = XboxController(0)
@@ -51,12 +55,11 @@ class Robot : TimedRobot() {
         mTimer = Timer()
 
         // Distance
-        // mDistance = UnitConverter.inchesToSensorPosition(12.0)
+        mDistance = UnitConverter.inchesToSensorPosition(5.0)
 
         // -- Feedback Device Configuration --\\
 
         // Bottom Chain
-        /**
         mChainBottom.apply {
             configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
             config_kP(0, Constants.PID.E_KP, 0)
@@ -67,7 +70,7 @@ class Robot : TimedRobot() {
 
         // Left Side
         mLeftMaster.apply {
-            setInverted(false)
+            setInverted(true)
             configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative)
             config_kP(0, Constants.PID.DT_KP, 0)
             config_kI(0, Constants.PID.DT_KI, 0)
@@ -103,7 +106,7 @@ class Robot : TimedRobot() {
         mRightSlave2.apply {
             setInverted(InvertType.FollowMaster)
             follow(mRightMaster)
-        } */
+        }
     }
 
     override fun robotInit() {
@@ -113,6 +116,7 @@ class Robot : TimedRobot() {
     }
 
     override fun disabledInit() {
+        mLeftMaster.setNeutralMode(NeutralMode.Brake)
     }
 
     override fun disabledPeriodic() {
@@ -121,9 +125,7 @@ class Robot : TimedRobot() {
     override fun teleopInit() {
         // -- Sets Motor Values --\\
         // mLeftMaster.set(ControlMode.Position, mDistance.toDouble())
-        // mLeftSlave1.set(ControlMode.Position, mDistance.toDouble())
         // mRightMaster.set(ControlMode.Position, mDistance.toDouble())
-        // mRightSlave1.set(ControlMode.Position, mDistance.toDouble())
     }
 
     @SuppressWarnings("LongMethod")
@@ -133,8 +135,6 @@ class Robot : TimedRobot() {
         var rightHand = mXboxController.getY(Hand.kRight)
 
         mLeftMaster.set(ControlMode.PercentOutput, leftHand * 0.5)
-        mLeftSlave1.set(ControlMode.PercentOutput, leftHand * 0.5)
         mRightMaster.set(ControlMode.PercentOutput, rightHand * 0.5)
-        mRightSlave1.set(ControlMode.PercentOutput, rightHand * 0.5)
     }
 }
