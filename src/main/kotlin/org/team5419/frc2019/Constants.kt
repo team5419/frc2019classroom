@@ -21,12 +21,11 @@ object RobotConstants {
 }
 
 object TrajectoryConstants {
-	val kMaxCentripetalAcceleration = 4.0.feet.acceleration
-	val kMaxAcceleration = 4.0.feet.acceleration
-	val kMaxAngularAcceleration = 2.0.radians.acceleration
-	val kMaxVelocity = 10.0.feet.velocity
+    val kMaxCentripetalAcceleration = 4.0.feet.acceleration
+    val kMaxAcceleration = 4.0.feet.acceleration
+    val kMaxAngularAcceleration = 2.0.radians.acceleration
+    val kMaxVelocity = 10.0.feet.velocity
 }
-
 
 object DriveConstants {
     // ports

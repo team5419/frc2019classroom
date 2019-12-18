@@ -1,62 +1,64 @@
 package org.team5419.frc2019
 
 import edu.wpi.first.wpilibj.TimedRobot
-import edu.wpi.first.wpilibj.XboxController
 
 import org.team5419.fault.auto.Routine
+import org.team5419.fault.auto.DriveTrajectoryAction
+import org.team5419.fault.math.units.feet
+import org.team5419.fault.math.units.derived.velocity
+import org.team5419.fault.math.geometry.Pose2d
+import org.team5419.fault.math.geometry.Pose2dWithCurvature
+import org.team5419.fault.trajectory.types.TimedTrajectory
+import org.team5419.fault.trajectory.TrajectoryGenerator
+import org.team5419.fault.trajectory.DefaultTrajectoryGenerator
+import org.team5419.fault.trajectory.constraints.TimingConstraint
+
 import org.team5419.frc2019.subsystems.Drivetrain
-import org.team5419.frc2019.controllers.AutoController
-import org.team5419.frc2019.auto.DriveTrajectoryAction
 
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
-    private val drivetrain: Drivetrain
-    private val mXboxController: XboxController
-    private val autoController: AutoController
-    val trajectoryGenerator: TrajectoryGenerator = DefaultTrajectoryGenerator(maxDx, maxDy, maxDTheta)
-    val defaultTrajectory: Trajectory = trajectoryGenerator.generateTrajectory(
+    // private val mXboxController: XboxController
+    val trajectoryGenerator: TrajectoryGenerator = DefaultTrajectoryGenerator
+
+    val trajectory: TimedTrajectory<Pose2dWithCurvature> = trajectoryGenerator.generateTrajectory(
         listOf(
-            Pose2d(0, 0),
+            Pose2d(),
             Pose2d(10.feet, 5.feet),
             Pose2d(10.feet, 10.feet)
         ),
-        List<TimingConstraint<Pose2dWithCurvature>>(),
+        listOf<TimingConstraint<Pose2dWithCurvature>>(),
         0.0.feet.velocity,
         0.0.feet.velocity,
         TrajectoryConstants.kMaxVelocity,
         TrajectoryConstants.kMaxAcceleration,
         true
     )
-    val defaultRoutine: Routine = Routine(
+
+    val routine: Routine = Routine(
         "default",
-        Pose2d(Vector2(0.0.meters, 0.0.meters), 0.degrees),
-        mutableListOf(DriveTrajectoryAction(drivetrain, drivetrain.trajectoryFollower, defaultTrajectory))
+        Pose2d(),
+        DriveTrajectoryAction(Drivetrain, Drivetrain.trajectoryFollower, trajectory)
     )
 
-    init {
-        drivetrain = Drivetrain
-        mXboxController = XboxController(0)
+    override fun robotInit() {}
+
+    override fun robotPeriodic() {}
+
+    override fun disabledInit() {}
+
+    override fun disabledPeriodic() {}
+
+    override fun autonomousInit() {
+        routine.start()
     }
 
-    override fun robotInit() {
-    }
-
-    override fun robotPeriodic() {
-    }
-
-    override fun disabledInit() {
-    }
-
-    override fun disabledPeriodic() {
+    override fun autonomousPeriodic() {
+        routine.update()
     }
 
     override fun teleopInit() {
     }
 
     override fun teleopPeriodic() {
-        val leftHand: Double = mXboxController.getY(Hand.kLeft) / 1
-        val rightHand: Double = mXboxController.getY(Hand.kRight) / -1
-        drivetrain.setPercent(leftHand, rightHand)
-        drivetrain.setOutput(//Nick: Output from controller?)
     }
 }

@@ -180,7 +180,7 @@ object Drivetrain : AbstractTankDrive() {
 
         leftMasterMotor.talonSRX.follow(rightMasterMotor.talonSRX, FollowerType.AuxOutput1)
 
-        periodicIO.angleTarget = angle.value
+        periodicIO.angleTarget = angle.value.value
 
         periodicIO.leftDemand = 0.0
         periodicIO.rightDemand = 0.0
@@ -190,11 +190,11 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override fun setVelocity(
-            leftVelocity: SIUnit<LinearVelocity>,
-            rightVelocity: SIUnit<LinearVelocity>,
-            leftFF: SIUnit<Volt>,
-            rightFF: SIUnit<Volt>
-        ) {
+        leftVelocity: SIUnit<LinearVelocity>,
+        rightVelocity: SIUnit<LinearVelocity>,
+        leftFF: SIUnit<Volt>,
+        rightFF: SIUnit<Volt>
+    ) {
         wantedState = State.Velocity
 
         leftMasterMotor.talonSRX.selectProfileSlot(kVelocitySlot, 0)
