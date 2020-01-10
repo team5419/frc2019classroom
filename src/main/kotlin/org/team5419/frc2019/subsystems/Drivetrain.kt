@@ -27,16 +27,7 @@ object Drivetrain : AbstractTankDrive() {
 
     // override val differentialDrive = DriveConstants.kDriveModel
 
-    override val differentialDrive = DifferentialDrive(
-        DriveConstants.kMass.value,
-        DriveConstants.kMoi,
-        DriveConstants.kAngularDrag,
-        DriveConstants.kWheelRadius.value,
-        DriveConstants.kEffectiveWheelbaseRadius.value,
-        DriveConstants.kLeftDriveGearbox,
-        DriveConstants.kRightDriveGearbox
-    )
-
+    override val differentialDrive = DriveConstants.kDriveModel
     override val trajectoryFollower = RamseteFollower(DriveConstants.kBeta, DriveConstants.kZeta)
 
     override val localization = TankPositionTracker(
@@ -47,31 +38,25 @@ object Drivetrain : AbstractTankDrive() {
 
     // hardware
     override val leftMasterMotor = BerkeliumSRX(DriveConstants.kLeftMasterPort, DriveConstants.kNativeGearboxConversion)
-    private val leftSlave1 = BerkeliumSPX(DriveConstants.kLeftSlave1Port, DriveConstants.kNativeGearboxConversion)
-    private val leftSlave2 = BerkeliumSPX(DriveConstants.kLeftSlave2Port, DriveConstants.kNativeGearboxConversion)
+    private val leftSlave = BerkeliumSPX(DriveConstants.kLeftSlavePort, DriveConstants.kNativeGearboxConversion)
 
     override val rightMasterMotor = BerkeliumSRX(
         DriveConstants.kRightMasterPort,
         DriveConstants.kNativeGearboxConversion
     )
-    private val rightSlave1 = BerkeliumSPX(DriveConstants.kRightSlave1Port, DriveConstants.kNativeGearboxConversion)
-    private val rightSlave2 = BerkeliumSPX(DriveConstants.kRightSlave2Port, DriveConstants.kNativeGearboxConversion)
+    private val rightSlave = BerkeliumSPX(DriveConstants.kRightSlavePort, DriveConstants.kNativeGearboxConversion)
 
     private val gyro = PigeonIMU(DriveConstants.kGyroPort)
 
     init {
-        leftSlave1.follow(leftMasterMotor)
-        leftSlave2.follow(leftMasterMotor)
+        leftSlave.follow(leftMasterMotor)
 
-        rightSlave1.follow(rightMasterMotor)
-        rightSlave2.follow(rightMasterMotor)
+        rightSlave.follow(rightMasterMotor)
 
-        leftSlave1.victorSPX.setInverted(InvertType.FollowMaster)
-        leftSlave2.victorSPX.setInverted(InvertType.FollowMaster)
+        leftSlave.victorSPX.setInverted(InvertType.FollowMaster)
         leftMasterMotor.outputInverted = true
 
-        rightSlave1.victorSPX.setInverted(InvertType.FollowMaster)
-        rightSlave2.victorSPX.setInverted(InvertType.FollowMaster)
+        rightSlave.victorSPX.setInverted(InvertType.FollowMaster)
         rightMasterMotor.outputInverted = false
 
         leftMasterMotor.talonSRX.configSelectedFeedbackSensor(

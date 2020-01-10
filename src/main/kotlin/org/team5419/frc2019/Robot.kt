@@ -37,7 +37,11 @@ class Robot : TimedRobot() {
     val routine: Routine = Routine(
         "default",
         Pose2d(),
-        DriveTrajectoryAction(Drivetrain, Drivetrain.trajectoryFollower, trajectory)
+        DriveTrajectoryAction(
+            Drivetrain,
+            Drivetrain.trajectoryFollower,
+            trajectory
+        )
     )
 
     override fun robotInit() {}
