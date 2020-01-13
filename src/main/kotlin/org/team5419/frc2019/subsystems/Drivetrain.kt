@@ -13,6 +13,7 @@ import org.team5419.fault.math.units.derived.*
 import org.team5419.fault.math.units.native.nativeUnits
 import org.team5419.fault.subsystems.drivetrain.AbstractTankDrive
 import org.team5419.fault.trajectory.followers.RamseteFollower
+import org.team5419.fault.trajectory.followers.PurePursuitFollower
 
 @SuppressWarnings("WildcardImport")
 object Drivetrain : AbstractTankDrive() {
@@ -28,7 +29,8 @@ object Drivetrain : AbstractTankDrive() {
     // override val differentialDrive = DriveConstants.kDriveModel
 
     override val differentialDrive = DriveConstants.kDriveModel
-    override val trajectoryFollower = RamseteFollower(DriveConstants.kBeta, DriveConstants.kZeta)
+    // override val trajectoryFollower = RamseteFollower(DriveConstants.kBeta, DriveConstants.kZeta)
+    override val trajectoryFollower = PurePursuitFollower(0.0, 0.1.seconds)
 
     override val localization = TankPositionTracker(
         { angle },
@@ -38,13 +40,13 @@ object Drivetrain : AbstractTankDrive() {
 
     // hardware
     override val leftMasterMotor = BerkeliumSRX(DriveConstants.kLeftMasterPort, DriveConstants.kNativeGearboxConversion)
-    private val leftSlave = BerkeliumSPX(DriveConstants.kLeftSlavePort, DriveConstants.kNativeGearboxConversion)
+    private val leftSlave = BerkeliumSRX(DriveConstants.kLeftSlavePort, DriveConstants.kNativeGearboxConversion)
 
     override val rightMasterMotor = BerkeliumSRX(
         DriveConstants.kRightMasterPort,
         DriveConstants.kNativeGearboxConversion
     )
-    private val rightSlave = BerkeliumSPX(DriveConstants.kRightSlavePort, DriveConstants.kNativeGearboxConversion)
+    private val rightSlave = BerkeliumSRX(DriveConstants.kRightSlavePort, DriveConstants.kNativeGearboxConversion)
 
     private val gyro = PigeonIMU(DriveConstants.kGyroPort)
 
@@ -53,10 +55,10 @@ object Drivetrain : AbstractTankDrive() {
 
         rightSlave.follow(rightMasterMotor)
 
-        leftSlave.victorSPX.setInverted(InvertType.FollowMaster)
+        leftSlave.talonSRX.setInverted(InvertType.FollowMaster)
         leftMasterMotor.outputInverted = true
 
-        rightSlave.victorSPX.setInverted(InvertType.FollowMaster)
+        rightSlave.talonSRX.setInverted(InvertType.FollowMaster)
         rightMasterMotor.outputInverted = false
 
         leftMasterMotor.talonSRX.configSelectedFeedbackSensor(
@@ -73,8 +75,8 @@ object Drivetrain : AbstractTankDrive() {
             FeedbackDevice.CTRE_MagEncoder_Relative, kVelocitySlot, 0
         )
 
-        leftMasterMotor.encoder.encoderPhase = DriveConstants.kEncoderPhase
-        rightMasterMotor.encoder.encoderPhase = DriveConstants.kEncoderPhase
+        leftMasterMotor.encoder.encoderPhase = DriveConstants.kLeftEncoderPhase
+        rightMasterMotor.encoder.encoderPhase = DriveConstants.kRightEncoderPhase
 
         rightMasterMotor.talonSRX.configRemoteFeedbackFilter(gyro.deviceID, RemoteSensorSource.Pigeon_Yaw, 1, 0)
         rightMasterMotor.talonSRX.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0)
@@ -195,6 +197,7 @@ object Drivetrain : AbstractTankDrive() {
     override fun setOutput(wheelVelocities: DifferentialDrive.WheelState, wheelVoltages: DifferentialDrive.WheelState) {
         wantedState = State.PathFollowing
 
+        // println(wheelVelocities.toString() + " " + wheelVoltages.toString())
         periodicIO.leftDemand = differentialDrive.wheelRadius * wheelVelocities.left
         periodicIO.rightDemand = differentialDrive.wheelRadius * wheelVelocities.right
 
@@ -213,6 +216,8 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override fun periodic() {
+        println(leftDistance.toString() + " " + rightDistance.toString())
+
         periodicIO.leftVoltage = leftMasterMotor.voltageOutput
         periodicIO.rightVoltage = rightMasterMotor.voltageOutput
 

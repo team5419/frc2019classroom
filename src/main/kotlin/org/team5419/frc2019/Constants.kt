@@ -29,16 +29,18 @@ object TrajectoryConstants {
 
 object DriveConstants {
     // ports
-    const val kLeftMasterPort = 1
-    const val kLeftSlavePort = 2
+    const val kLeftMasterPort = 2
+    const val kLeftSlavePort = 4
 
-    const val kRightMasterPort = 3
-    const val kRightSlavePort = 4
+    const val kRightMasterPort = 5
+    const val kRightSlavePort = 3
 
     const val kGyroPort = 7
 
     // misc
-    const val kEncoderPhase = true
+    const val kLeftEncoderPhase = false
+    const val kRightEncoderPhase = true
+
 
     // path following parameters
     const val kBeta = 2.0 // m^-2
@@ -52,44 +54,47 @@ object DriveConstants {
     val kWheelDiameter = kWheelRadius * 2.0
     val kWheelCir = kWheelDiameter * PI
 
-    val kTrackWidth = 20.inches
+    val kTrackWidth = 25.75.inches
     val kEffectiveWheelbaseRadius = kTrackWidth / 2.0
 
-    val kMass = 120.lbs
-    val kMoi = 0.0 // kg * m^2
+    val kMass = 50.lbs
+    val kMoi = kMass * 0.46 * 0.46 // kg * m^2
     val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
     val kTicksPerRotation = 4096.nativeUnits
     val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
-    const val kDriveKv = kEpsilon
-    const val kDriveKa = kEpsilon
-    const val kDriveKs = kEpsilon
+    const val kLeftDriveKv = 1.71
+    const val kLeftDriveKa = 0.348
+    const val kLeftDriveKs = 1.66
+    const val kRightDriveKv = kEpsilon
+    const val kRightDriveKa = kEpsilon
+    const val kRightDriveKs = kEpsilon
 
     val kLeftDriveGearbox = DCMotorTransmission(
-            1 / kDriveKv,
-            kWheelRadius.value.pow(2) * kMass.value / (2.0 * kDriveKa),
-            kDriveKs
+        1 / kLeftDriveKv,
+        kWheelRadius.value.pow(2) * kMass.value / (2.0 * kLeftDriveKa),
+        kLeftDriveKs
     )
 
     val kRightDriveGearbox = DCMotorTransmission(
-            1 / kDriveKv,
-            kWheelRadius.value.pow(2) * kMass.value / (2.0 * kDriveKa),
-            kDriveKs
+        1 / kLeftDriveKv,
+        kWheelRadius.value.pow(2) * kMass.value / (2.0 * kLeftDriveKa),
+        kLeftDriveKs
     )
 
     val kDriveModel = DifferentialDrive(
-            kMass.value,
-            kMoi,
-            kAngularDrag, // tune me
-            kWheelRadius.value,
-            kEffectiveWheelbaseRadius.value,
-            kLeftDriveGearbox,
-            kRightDriveGearbox
+        kMass.value,
+        kMoi.value,
+        kAngularDrag, // tune me
+        kWheelRadius.value,
+        kEffectiveWheelbaseRadius.value,
+        kLeftDriveGearbox,
+        kRightDriveGearbox
     )
 
     val kNativeGearboxConversion = NativeUnitLengthModel(
-            kTicksPerRotation,
-            kWheelRadius
+        kTicksPerRotation,
+        kWheelRadius
     )
 }
