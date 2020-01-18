@@ -46,23 +46,23 @@ object DriveConstants {
     const val kBeta = 2.0 // m^-2
     const val kZeta = 0.7 // unitless
 
-    val kMotionMagicVelocity = 130.inches.velocity
-    val kMotionMagicAcceleration = 50.inches.acceleration
+    const val kMotionMagicVelocity = 130.inches.velocity
+    const val kMotionMagicAcceleration = 50.inches.acceleration
 
     // dimensions and constants
-    val kWheelRadius = 3.inches
-    val kWheelDiameter = kWheelRadius * 2.0
-    val kWheelCir = kWheelDiameter * PI
+    const val kWheelRadius = 3.inches
+    const val kWheelDiameter = kWheelRadius * 2.0
+    const val kWheelCir = kWheelDiameter * PI
 
-    val kTrackWidth = 25.75.inches
-    val kEffectiveWheelbaseRadius = kTrackWidth / 2.0
+    const val kTrackWidth = 25.75.inches
+    const val kEffectiveWheelbaseRadius = kTrackWidth / 2.0
 
-    val kMass = 50.lbs
-    val kMoi = kMass * 0.46 * 0.46 // kg * m^2
-    val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
+    const val kMass = 50.lbs
+    const val kMoi = kMass * 0.46 * 0.46 // kg * m^2
+    const val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
-    val kTicksPerRotation = 4096.nativeUnits
-    val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
+    const val kTicksPerRotation = 2048.nativeUnits
+    const val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
     const val kLeftDriveKv = 1.71
     const val kLeftDriveKa = 0.348
