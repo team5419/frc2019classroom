@@ -21,49 +21,49 @@ import org.team5419.frc2019.subsystems.Drivetrain
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
     // private val mXboxController: XboxController
-    val trajectoryGenerator: TrajectoryGenerator = DefaultTrajectoryGenerator
+    // val trajectoryGenerator: TrajectoryGenerator = DefaultTrajectoryGenerator
     val controller = XboxController(0)
-    private val kMaxVelocity = 12.feet.velocity
-    private val kMaxAcceleration = 6.feet.acceleration
-    private val kMaxHabVelocity = 6.feet.velocity
-    private val kFirstPathVMaxAcceleration = 6.feet.velocity
-    private val kVelocityRadiusConstraintRadius = 3.feet
-    private val kVelocityRadiusConstraintVelocity = 3.feet.velocity
-    private val kMaxCentripetalAcceleration = 9.feet.acceleration
-    private val kMaxVoltage = 10.volts
+    // private val kMaxVelocity = 12.feet.velocity
+    // private val kMaxAcceleration = 6.feet.acceleration
+    // private val kMaxHabVelocity = 6.feet.velocity
+    // private val kFirstPathVMaxAcceleration = 6.feet.velocity
+    // private val kVelocityRadiusConstraintRadius = 3.feet
+    // private val kVelocityRadiusConstraintVelocity = 3.feet.velocity
+    // private val kMaxCentripetalAcceleration = 9.feet.acceleration
+    // private val kMaxVoltage = 10.volts
 
-    val trajectory: TimedTrajectory<Pose2dWithCurvature> = trajectoryGenerator.generateTrajectory(
-        listOf(
-            Pose2d(10.feet, 0.feet),
-            Pose2d(10.feet, 10.feet)
-        ),
-        listOf<TimingConstraint<Pose2dWithCurvature>>(
-            CentripetalAccelerationConstraint(kMaxCentripetalAcceleration),
-            VelocityLimitRadiusConstraint(
-                Vector2d(10.feet, 10.feet),
-                kVelocityRadiusConstraintRadius,
-                kVelocityRadiusConstraintVelocity
-            ),
-            DifferentialDriveDynamicsConstraint(DriveConstants.kDriveModel, kMaxVoltage)
-        ),
-        0.0.feet.velocity,
-        0.0.feet.velocity,
-        TrajectoryConstants.kMaxVelocity,
-        TrajectoryConstants.kMaxAcceleration,
-        true
-    )
+    // val trajectory: TimedTrajectory<Pose2dWithCurvature> = trajectoryGenerator.generateTrajectory(
+    //     listOf(
+    //         Pose2d(10.feet, 0.feet),
+    //         Pose2d(10.feet, 10.feet)
+    //     ),
+    //     listOf<TimingConstraint<Pose2dWithCurvature>>(
+    //         CentripetalAccelerationConstraint(kMaxCentripetalAcceleration),
+    //         VelocityLimitRadiusConstraint(
+    //             Vector2d(10.feet, 10.feet),
+    //             kVelocityRadiusConstraintRadius,
+    //             kVelocityRadiusConstraintVelocity
+    //         ),
+    //         DifferentialDriveDynamicsConstraint(DriveConstants.kDriveModel, kMaxVoltage)
+    //     ),
+    //     0.0.feet.velocity,
+    //     0.0.feet.velocity,
+    //     TrajectoryConstants.kMaxVelocity,
+    //     TrajectoryConstants.kMaxAcceleration,
+    //     true
+    // )
 
 
 
-    val routine: Routine = Routine(
-        "default",
-        Pose2d(),
-        DriveTrajectoryAction(
-            Drivetrain,
-            Drivetrain.trajectoryFollower,
-            trajectory
-        )
-    )
+    // val routine: Routine = Routine(
+    //     "default",
+    //     Pose2d(),
+    //     DriveTrajectoryAction(
+    //         Drivetrain,
+    //         Drivetrain.trajectoryFollower,
+    //         trajectory
+    //     )
+    // )
 
     override fun robotInit() {}
 
@@ -76,11 +76,11 @@ class Robot : TimedRobot() {
     override fun disabledPeriodic() {}
 
     override fun autonomousInit() {
-        routine.start()
+        // routine.start()
     }
 
     override fun autonomousPeriodic() {
-        routine.update()
+        // routine.update()
     }
 
     override fun teleopInit() {
