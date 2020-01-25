@@ -107,7 +107,7 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousPeriodic() {
-        routine.update()
+        // routine.update()
     }
 
     override fun teleopInit() {
