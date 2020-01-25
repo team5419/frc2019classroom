@@ -14,6 +14,8 @@ import org.team5419.fault.math.units.native.nativeUnits
 import org.team5419.fault.subsystems.drivetrain.AbstractTankDrive
 import org.team5419.fault.trajectory.followers.RamseteFollower
 import org.team5419.fault.trajectory.followers.PurePursuitFollower
+import org.team5419.fault.input.DriveSignal
+import org.team5419.fault.math.kEpsilon
 
 @SuppressWarnings("WildcardImport")
 object Drivetrain : AbstractTankDrive() {
@@ -30,7 +32,7 @@ object Drivetrain : AbstractTankDrive() {
 
     override val differentialDrive = DriveConstants.kDriveModel
     // override val trajectoryFollower = RamseteFollower(DriveConstants.kBeta, DriveConstants.kZeta)
-    override val trajectoryFollower = PurePursuitFollower(0.0, 0.1.seconds)
+    override val trajectoryFollower = PurePursuitFollower(10.0, 0.1.seconds)
 
     override val localization = TankPositionTracker(
         { angle },
@@ -52,7 +54,6 @@ object Drivetrain : AbstractTankDrive() {
 
     init {
         leftSlave.follow(leftMasterMotor)
-
         rightSlave.follow(rightMasterMotor)
 
         leftSlave.talonSRX.setInverted(InvertType.FollowMaster)
@@ -74,6 +75,8 @@ object Drivetrain : AbstractTankDrive() {
         rightMasterMotor.talonSRX.configSelectedFeedbackSensor(
             FeedbackDevice.CTRE_MagEncoder_Relative, kVelocitySlot, 0
         )
+
+        leftMasterMotor.talonSRX.config_kP(0, 0.1, 0)
 
         leftMasterMotor.encoder.encoderPhase = DriveConstants.kLeftEncoderPhase
         rightMasterMotor.encoder.encoderPhase = DriveConstants.kRightEncoderPhase
@@ -106,6 +109,7 @@ object Drivetrain : AbstractTankDrive() {
         rightMasterMotor.motionProfileAcceleration = DriveConstants.kMotionMagicAcceleration
 
         isBraking = false
+        gyro.setFusedHeading(0.0)
 
         localization.reset()
         Notifier {
@@ -114,13 +118,13 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override val leftDistance: SIUnit<Meter>
-        get() = -DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.leftRawSensorPosition)
+        get() = DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.leftRawSensorPosition)
 
     override val rightDistance: SIUnit<Meter>
         get() = DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.rightRawSensorPosition)
 
     override val leftDistanceError: SIUnit<Meter>
-        get() = -DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.leftRawDistanceError)
+        get() = DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.leftRawDistanceError)
 
     override val rightDistanceError: SIUnit<Meter>
         get() = DriveConstants.kNativeGearboxConversion.fromNativeUnitPosition(periodicIO.rightRawDistanceError)
@@ -135,6 +139,7 @@ object Drivetrain : AbstractTankDrive() {
         get() = periodicIO.turnError
 
     override fun setPercent(left: Double, right: Double) = setOpenLoop(left, right)
+    fun setPercent(signal : DriveSignal) = setOpenLoop(signal.left, signal.right )
 
     fun setOpenLoop(left: Double, right: Double) {
         wantedState = State.OpenLoop
@@ -195,11 +200,12 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override fun setOutput(wheelVelocities: DifferentialDrive.WheelState, wheelVoltages: DifferentialDrive.WheelState) {
+        // println(wheelVelocities.toString() + " " + wheelVoltages.toString())
         wantedState = State.PathFollowing
 
         // println(wheelVelocities.toString() + " " + wheelVoltages.toString())
-        periodicIO.leftDemand = differentialDrive.wheelRadius * wheelVelocities.left
-        periodicIO.rightDemand = differentialDrive.wheelRadius * wheelVelocities.right
+        periodicIO.leftDemand = differentialDrive.wheelRadius * wheelVelocities.left * 0.001
+        periodicIO.rightDemand = differentialDrive.wheelRadius * wheelVelocities.right * 0.001
 
         periodicIO.leftFeedforward = wheelVoltages.left.volts
         periodicIO.rightFeedforward = wheelVoltages.right.volts
@@ -216,7 +222,8 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override fun periodic() {
-        println(leftDistance.toString() + " " + rightDistance.toString())
+        // println(leftDistance.toString() + " " + rightDistance.toString())
+        // println(periodicIO.leftRawSensorPosition.value.toString() + " " + periodicIO.rightRawSensorPosition.value.toString())
 
         periodicIO.leftVoltage = leftMasterMotor.voltageOutput
         periodicIO.rightVoltage = rightMasterMotor.voltageOutput
@@ -232,8 +239,8 @@ object Drivetrain : AbstractTankDrive() {
         periodicIO.leftRawSensorVelocity = leftMasterMotor.encoder.rawVelocity
         periodicIO.rightRawSensorVelocity = rightMasterMotor.encoder.rawVelocity
 
-        periodicIO.gyroAngle = gyro.fusedHeading.radians
-
+        periodicIO.gyroAngle = gyro.fusedHeading.degrees
+        // println("angle: " + periodicIO.gyroAngle.value.toString())
         val xyz = DoubleArray(3)
         gyro.getRawGyro(xyz)
         periodicIO.angularVelocity = xyz[1].radians.velocity
@@ -284,7 +291,7 @@ object Drivetrain : AbstractTankDrive() {
         var leftRawSensorVelocity = 0.0.nativeUnits.velocity
         var rightRawSensorVelocity = 0.0.nativeUnits.velocity
 
-        var gyroAngle: SIUnit<Radian> = 0.0.degrees
+        var gyroAngle: SIUnit<Radian> = 0.0.radians
         var angularVelocity = 0.0.radians.velocity
         var turnError: SIUnit<Radian> = 0.0.degrees
 

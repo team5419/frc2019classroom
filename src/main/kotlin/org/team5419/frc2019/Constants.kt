@@ -29,16 +29,16 @@ object TrajectoryConstants {
 
 object DriveConstants {
     // ports
-    const val kLeftMasterPort = 2
-    const val kLeftSlavePort = 4
+    const val kLeftMasterPort = 3
+    const val kLeftSlavePort = 8
 
     const val kRightMasterPort = 5
-    const val kRightSlavePort = 3
+    const val kRightSlavePort = 4
 
     const val kGyroPort = 7
 
     // misc
-    const val kLeftEncoderPhase = false
+    const val kLeftEncoderPhase = true
     const val kRightEncoderPhase = true
 
 
@@ -61,7 +61,7 @@ object DriveConstants {
     val kMoi = kMass * 0.46 * 0.46 // kg * m^2
     val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
-    val kTicksPerRotation = 4096.nativeUnits
+    val kTicksPerRotation = 2048.nativeUnits
     val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
     const val kLeftDriveKv = 1.71
