@@ -88,7 +88,8 @@ public class Paths(generator: PathGenerator) {
         public val rightCargoBackup = Pose2d(Vector2(140, -120), Rotation2d.fromDegrees(180))
 
         public val zero = Pose2d(Vector2(0, 0), Rotation2d.fromDegrees(0))
-        public val tuning = Pose2d(Vector2(25, 15), Rotation2d.fromDegrees(45))
+        // public val tuning = Pose2d(Vector2(25, 15), Rotation2d.fromDegrees(45))
+        public val tuning = Pose2d(Vector2(10, 10), Rotation2d.fromDegrees(0))
     }
 
     private fun generatePathToLeftRocket(): Path {

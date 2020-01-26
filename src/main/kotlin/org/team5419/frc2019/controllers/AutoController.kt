@@ -55,7 +55,7 @@ public class AutoController(subsystems: SubsystemsManager, routines: Routines) :
         reset()
         // val routine = mRoutines.getRoutineWithName(mAutoSelector.selected)
         // currentRoutine = if (routine == null) mRoutines.baseline else routine
-        currentRoutine = mRoutines.test
+        currentRoutine = mRoutines.tuning
         mSubsystems.drivetrain.brakeMode = true
         mSubsystems.vision.ledState = LEDState.ON
         mSubsystems.vision.visionMode = VisionMode.VISION
