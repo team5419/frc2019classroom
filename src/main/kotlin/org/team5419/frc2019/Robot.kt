@@ -19,6 +19,7 @@ import org.team5419.fault.trajectory.constraints.*
 import org.team5419.frc2019.subsystems.Drivetrain
 import org.team5419.fault.input.DriveHelper
 import org.team5419.fault.input.SpaceDriveHelper
+import com.ctre.phoenix.motorcontrol.ControlMode
 
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
@@ -43,17 +44,17 @@ class Robot : TimedRobot() {
 
     val trajectory: TimedTrajectory<Pose2dWithCurvature> = trajectoryGenerator.generateTrajectory(
         listOf(
-            Pose2d(100.0.feet, 0.0.feet),
-            Pose2d(101.0.feet, 0.0.feet)
+            Pose2d(3.0.feet, 0.0.feet),
+            Pose2d(6.0.feet, 0.0.feet)
         ),
         listOf<TimingConstraint<Pose2dWithCurvature>>(
-            CentripetalAccelerationConstraint(kMaxCentripetalAcceleration),
-            VelocityLimitRadiusConstraint(
-                Vector2d(10.feet, 10.feet),
-                kVelocityRadiusConstraintRadius,
-                kVelocityRadiusConstraintVelocity
-            ),
-            DifferentialDriveDynamicsConstraint(DriveConstants.kDriveModel, kMaxVoltage)
+            // CentripetalAccelerationConstraint(kMaxCentripetalAcceleration),
+            // VelocityLimitRadiusConstraint(
+            //     Vector2d(10.feet, 10.feet),
+            //     kVelocityRadiusConstraintRadius,
+            //     kVelocityRadiusConstraintVelocity
+            // ),
+            // DifferentialDriveDynamicsConstraint(DriveConstants.kDriveModel, kMaxVoltage)
         ),
         0.0.feet.velocity,
         0.0.feet.velocity,
@@ -73,7 +74,7 @@ class Robot : TimedRobot() {
         val driveStraightRoutine = Routine(
             "drive straight",
             Pose2d(),
-            DriveStraightAction(Drivetrain, 10.feet)
+            DriveStraightAction(Drivetrain, 5.feet)
         )
         return trajectoryRoutine
     }
@@ -83,9 +84,9 @@ class Robot : TimedRobot() {
 
     override fun robotPeriodic() {
         println(
-            "angle: " + Drivetrain.robotPosition.rotation.degree.toString() + "\n" +
-            "left: " + Drivetrain.leftDistance.value.toString() + "\n" +
-            "right: " + Drivetrain.rightDistance.value.toString()
+            // "angle: " + Drivetrain.robotPosition.rotation.degree.toString() + "\n" +
+            "left: " + Drivetrain.leftDistance.inFeet().toString() + "\n" +
+            "right: " + Drivetrain.rightDistance.inFeet().toString()
         )
         Drivetrain.periodic()
     }
@@ -103,15 +104,17 @@ class Robot : TimedRobot() {
     }
 
     override fun autonomousPeriodic() {
-        // routine.update()
+        routine.update()
+        // println(
+        //     "left error: " + Drivetrain.leftMasterMotor.motorController.getClosedLoopError(0) + "\n" +
+        //     "right error: " + Drivetrain.rightMasterMotor.motorController.getClosedLoopError(0)
+        // )
     }
 
     override fun teleopInit() {
-        // println(trajectory.path.toString())
     }
 
     override fun teleopPeriodic() {
-        // println("Left: " + Drivetrain.leftDistance.toString() + "Right: " + Drivetrain.rightDistance.toString())
         Drivetrain.setPercent(driveHelper.output())
     }
 }

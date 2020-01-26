@@ -38,8 +38,8 @@ object DriveConstants {
     const val kGyroPort = 7
 
     // misc
-    const val kLeftEncoderPhase = true
-    const val kRightEncoderPhase = true
+    const val kLeftEncoderPhase = false
+    const val kRightEncoderPhase = false
 
     // path following parameters
     const val kBeta = 2.0 // m^-2
@@ -60,15 +60,16 @@ object DriveConstants {
     val kMoi = kMass * 0.46 * 0.46 // kg * m^2
     val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
-    val kTicksPerRotation = 2048.nativeUnits
+    val kTicksPerRotation = 4092.nativeUnits
     val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
     const val kLeftDriveKv = 1.71
     const val kLeftDriveKa = 0.348
     const val kLeftDriveKs = 1.66
-    const val kRightDriveKv = kEpsilon
-    const val kRightDriveKa = kEpsilon
-    const val kRightDriveKs = kEpsilon
+
+    const val kRightDriveKv = 1.71
+    const val kRightDriveKa = 0.348
+    const val kRightDriveKs = 1.66
 
     val kLeftDriveGearbox = DCMotorTransmission(
         1 / kLeftDriveKv,
@@ -77,9 +78,9 @@ object DriveConstants {
     )
 
     val kRightDriveGearbox = DCMotorTransmission(
-        1 / kLeftDriveKv,
-        kWheelRadius.value.pow(2) * kMass.value / (2.0 * kLeftDriveKa),
-        kLeftDriveKs
+        1 / kRightDriveKv,
+        kWheelRadius.value.pow(2) * kMass.value / (2.0 * kRightDriveKa),
+        kRightDriveKs
     )
 
     val kDriveModel = DifferentialDrive(

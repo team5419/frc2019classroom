@@ -13,6 +13,7 @@ import org.team5419.fault.math.units.derived.*
 import org.team5419.fault.math.units.native.nativeUnits
 import org.team5419.fault.subsystems.drivetrain.AbstractTankDrive
 import org.team5419.fault.trajectory.followers.PurePursuitFollower
+import org.team5419.fault.trajectory.followers.RamseteFollower
 import org.team5419.fault.input.DriveSignal
 
 @SuppressWarnings("WildcardImport")
@@ -75,24 +76,28 @@ object Drivetrain : AbstractTankDrive() {
         )
 
         leftMasterMotor.talonSRX.config_kP(0, 0.1, 0)
+        rightMasterMotor.talonSRX.config_kP(0, 0.1, 0)
+
+        leftMasterMotor.talonSRX.config_kF(0, 0.1, 0)
+        rightMasterMotor.talonSRX.config_kF(0, 0.1, 0)
 
         leftMasterMotor.encoder.encoderPhase = DriveConstants.kLeftEncoderPhase
         rightMasterMotor.encoder.encoderPhase = DriveConstants.kRightEncoderPhase
 
-        rightMasterMotor.talonSRX.configRemoteFeedbackFilter(gyro.deviceID, RemoteSensorSource.Pigeon_Yaw, 1, 0)
-        rightMasterMotor.talonSRX.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0)
-        rightMasterMotor.talonSRX.configSelectedFeedbackCoefficient(
-            DriveConstants.kPigeonConversion.value, 1, 0
-        )
+        // rightMasterMotor.talonSRX.configRemoteFeedbackFilter(gyro.deviceID, RemoteSensorSource.Pigeon_Yaw, 1, 0)
+        // rightMasterMotor.talonSRX.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, 1, 0)
+        // rightMasterMotor.talonSRX.configSelectedFeedbackCoefficient(
+        //     DriveConstants.kPigeonConversion.value, 1, 0
+        // )
 
         leftMasterMotor.talonSRX.setSelectedSensorPosition(0, kPositionSlot, 0)
         leftMasterMotor.talonSRX.setSelectedSensorPosition(0, kVelocitySlot, 0)
         rightMasterMotor.talonSRX.setSelectedSensorPosition(0, kPositionSlot, 0)
         rightMasterMotor.talonSRX.setSelectedSensorPosition(0, kVelocitySlot, 0)
 
-        rightMasterMotor.talonSRX.configAuxPIDPolarity(true, 0)
-        rightMasterMotor.talonSRX.configClosedLoopPeakOutput(kTurnSlot, 1.0, 0)
-        rightMasterMotor.talonSRX.configAllowableClosedloopError(kTurnSlot, 0, 0)
+        // rightMasterMotor.talonSRX.configAuxPIDPolarity(true, 0)
+        // rightMasterMotor.talonSRX.configClosedLoopPeakOutput(kTurnSlot, 1.0, 0)
+        // rightMasterMotor.talonSRX.configAllowableClosedloopError(kTurnSlot, 0, 0)
 
         leftMasterMotor.talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)
         rightMasterMotor.talonSRX.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, 0)
