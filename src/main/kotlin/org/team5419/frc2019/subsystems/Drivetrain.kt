@@ -12,10 +12,8 @@ import org.team5419.fault.math.units.*
 import org.team5419.fault.math.units.derived.*
 import org.team5419.fault.math.units.native.nativeUnits
 import org.team5419.fault.subsystems.drivetrain.AbstractTankDrive
-import org.team5419.fault.trajectory.followers.RamseteFollower
 import org.team5419.fault.trajectory.followers.PurePursuitFollower
 import org.team5419.fault.input.DriveSignal
-import org.team5419.fault.math.kEpsilon
 
 @SuppressWarnings("WildcardImport")
 object Drivetrain : AbstractTankDrive() {
@@ -139,7 +137,7 @@ object Drivetrain : AbstractTankDrive() {
         get() = periodicIO.turnError
 
     override fun setPercent(left: Double, right: Double) = setOpenLoop(left, right)
-    fun setPercent(signal : DriveSignal) = setOpenLoop(signal.left, signal.right )
+    fun setPercent(signal: DriveSignal) = setOpenLoop(signal.left, signal.right)
 
     fun setOpenLoop(left: Double, right: Double) {
         wantedState = State.OpenLoop
@@ -222,9 +220,6 @@ object Drivetrain : AbstractTankDrive() {
     }
 
     override fun periodic() {
-        // println(leftDistance.toString() + " " + rightDistance.toString())
-        // println(periodicIO.leftRawSensorPosition.value.toString() + " " + periodicIO.rightRawSensorPosition.value.toString())
-
         periodicIO.leftVoltage = leftMasterMotor.voltageOutput
         periodicIO.rightVoltage = rightMasterMotor.voltageOutput
 

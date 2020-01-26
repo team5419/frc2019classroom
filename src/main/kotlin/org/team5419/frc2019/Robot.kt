@@ -17,7 +17,6 @@ import org.team5419.fault.trajectory.TrajectoryGenerator
 import org.team5419.fault.trajectory.DefaultTrajectoryGenerator
 import org.team5419.fault.trajectory.constraints.*
 import org.team5419.frc2019.subsystems.Drivetrain
-import org.team5419.fault.input.DriveSignal
 import org.team5419.fault.input.DriveHelper
 import org.team5419.fault.input.SpaceDriveHelper
 
@@ -63,10 +62,9 @@ class Robot : TimedRobot() {
         true
     )
 
-
     var routine = generateRoutines()
-    
-    fun generateRoutines() : Routine {
+
+    fun generateRoutines(): Routine {
         val trajectoryRoutine: Routine = Routine(
             "default",
             Pose2d(),
@@ -80,12 +78,10 @@ class Robot : TimedRobot() {
         return trajectoryRoutine
     }
 
-
     override fun robotInit() {
     }
 
     override fun robotPeriodic() {
-        // println(Drivetrain.leftDistance.value.toString() + " " + Drivetrain.rightDistance.value.toString() + " " + Drivetrain.angle.degree.toString())
         println(
             "angle: " + Drivetrain.robotPosition.rotation.degree.toString() + "\n" +
             "left: " + Drivetrain.leftDistance.value.toString() + "\n" +

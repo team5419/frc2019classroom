@@ -30,7 +30,7 @@ object TrajectoryConstants {
 object DriveConstants {
     // ports
     const val kLeftMasterPort = 3
-    const val kLeftSlavePort = 8
+    const val kLeftSlavePort = 9
 
     const val kRightMasterPort = 5
     const val kRightSlavePort = 4
@@ -40,7 +40,6 @@ object DriveConstants {
     // misc
     const val kLeftEncoderPhase = true
     const val kRightEncoderPhase = true
-
 
     // path following parameters
     const val kBeta = 2.0 // m^-2
