@@ -2,7 +2,6 @@ package org.team5499.frc2019.auto.actions
 
 import org.team5499.frc2019.subsystems.Drivetrain
 
-
 import org.team5499.monkeyLib.auto.Action
 
 /**
@@ -28,7 +27,6 @@ public class CrossedXBoundaryAction(
     }
 
     public override fun start() {
-
     }
 
     public override fun next(): Boolean {

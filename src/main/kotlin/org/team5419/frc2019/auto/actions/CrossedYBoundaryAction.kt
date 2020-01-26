@@ -4,7 +4,6 @@ import org.team5499.frc2019.subsystems.Drivetrain
 
 import org.team5499.monkeyLib.auto.Action
 
-
 /**
  * An action that finishes when the robot crosses a y boundry line
  *
@@ -28,7 +27,6 @@ public class CrossedYBoundaryAction(
     }
 
     public override fun start() {
-
     }
 
     public override fun next(): Boolean {

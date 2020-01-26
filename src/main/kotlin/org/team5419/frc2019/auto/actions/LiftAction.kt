@@ -4,8 +4,6 @@ import org.team5499.frc2019.subsystems.Lift
 import org.team5499.frc2019.subsystems.Lift.LiftHeight
 import org.team5499.monkeyLib.auto.Action
 
-
-
 /**
  * An action that sets the elevator to a certain height.
  *

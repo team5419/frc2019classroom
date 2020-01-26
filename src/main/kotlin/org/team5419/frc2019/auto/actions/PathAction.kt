@@ -3,7 +3,6 @@ package org.team5499.frc2019.auto.actions
 import org.team5499.frc2019.subsystems.Drivetrain
 import org.team5499.frc2019.Constants
 
-
 import org.team5499.monkeyLib.auto.Action
 import org.team5499.monkeyLib.path.Path
 import org.team5499.monkeyLib.path.PathFollower

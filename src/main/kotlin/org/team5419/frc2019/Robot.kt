@@ -31,8 +31,6 @@ import org.team5499.frc2019.auto.Routines
 
 import com.ctre.phoenix.sensors.PigeonIMU
 
-
-
 class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     // inputs
     private val mDriver: XboxController

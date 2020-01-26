@@ -17,8 +17,6 @@ import org.team5499.frc2019.auto.actions.HatchMechAction
 import org.team5499.frc2019.auto.actions.WaitForLiftZeroAction
 import org.team5499.frc2019.auto.actions.CrossedXBoundaryAction
 import org.team5499.frc2019.auto.actions.TurnAction
-import org.team5499.frc2019.auto.actions.VisionGoalAction
-import org.team5499.frc2019.auto.actions.VisionGoalAction.VisionGoal
 import org.team5499.frc2019.auto.actions.DriveStraightAction
 
 import java.util.LinkedHashMap

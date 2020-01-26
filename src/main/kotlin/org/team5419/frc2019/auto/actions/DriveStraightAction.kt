@@ -7,7 +7,6 @@ import org.team5499.monkeyLib.auto.Action
 
 import kotlin.math.abs
 
-
 /**
  * An action that will make the robot drive a certian amout of inches
  *

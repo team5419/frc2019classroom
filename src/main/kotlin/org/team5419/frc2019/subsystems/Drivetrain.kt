@@ -25,7 +25,6 @@ import org.team5499.monkeyLib.math.geometry.Pose2d
 import org.team5499.monkeyLib.util.Utils
 import org.team5499.monkeyLib.input.DriveSignal
 
-
 @Suppress("LargeClass", "TooManyFunctions")
 public class Drivetrain(
     leftMaster: LazyTalonSRX,

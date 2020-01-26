@@ -1,10 +1,7 @@
 package org.team5499.frc2019
 
-
-
 @SuppressWarnings("MagicNumber")
 public object Constants {
-
 
     public const val ROBOT_UPDATE_PERIOD = 0.02 // maybe change back to 0.005
     public const val TALON_UPDATE_PERIOD_MS = 10
@@ -106,7 +103,7 @@ public object Constants {
         public const val SLAVE_TALON_PORT = 5
 
         // pid
-        public var KP = 0.7   // worked a 0.09
+        public var KP = 0.7 // worked a 0.09
         public var KI = 0.0
         public var KD = 0.0
         public var KF = 0.0
@@ -122,9 +119,9 @@ public object Constants {
         public val HATCH_MID_HEIGHT = 34.5
         public val HATCH_HIGH_HEIGHT = 60.5
 
-        public var BALL_LOW_HEIGHT = 3.5   // 4.5
-        public val BALL_MID_HEIGHT = 30.0   // 32
-        public val BALL_HIGH_HEIGHT = 57.0   // 58
+        public var BALL_LOW_HEIGHT = 3.5 // 4.5
+        public val BALL_MID_HEIGHT = 30.0 // 32
+        public val BALL_HIGH_HEIGHT = 57.0 // 58
         public var BALL_HUMAN_PLAYER_HEIGHT = 20.0
 
         // constants
@@ -179,10 +176,10 @@ public object Constants {
         public var HATCH_TARGET_HEIGHT = 29.0
         public var BALL_TARGET_HEIGHT = 36.0
 
-        public var TARGET_DISTANCE = 24.0   // inches
+        public var TARGET_DISTANCE = 24.0 // inches
 
-        public var ACCEPTABLE_ANGLE_ERROR = 3.0   // degrees(?
-        public var ACCEPTABLE_DISTANCE_ERROR = 2.0   // inches (?
+        public var ACCEPTABLE_ANGLE_ERROR = 3.0 // degrees(?
+        public var ACCEPTABLE_DISTANCE_ERROR = 2.0 // inches (?
 
         public var ANGLE_KP = 1.0
         public var ANGLE_KI = 0.0
@@ -199,7 +196,7 @@ public object Constants {
         fun initProps() {
             println("init Auto")
         }
-        public var AUTO_DELAY = 0.0   // seconds, set this from dashboard
+        public var AUTO_DELAY = 0.0 // seconds, set this from dashboard
         public var LOOKAHEAD_DISTANCE = 18.0
     }
 }
