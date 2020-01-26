@@ -1,4 +1,4 @@
-package org.team5499.frc2019.subsystems
+package org.team5419.frc2019.subsystems
 
 import org.team5499.monkeyLib.Subsystem
 import org.team5499.monkeyLib.hardware.LazyTalonSRX
@@ -8,7 +8,7 @@ import org.team5499.monkeyLib.util.CircularDoubleBuffer
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.ctre.phoenix.motorcontrol.NeutralMode
 
-import org.team5499.frc2019.Constants
+import org.team5419.frc2019.Constants
 
 public class Intake(talon: LazyTalonSRX) : Subsystem() {
 
