@@ -3,7 +3,7 @@ package org.team5499.frc2019.auto.actions
 import org.team5499.frc2019.subsystems.Drivetrain
 import org.team5499.frc2019.Constants
 
-import org.tinylog.Logger
+
 import org.team5499.monkeyLib.auto.Action
 import org.team5499.monkeyLib.path.Path
 import org.team5499.monkeyLib.path.PathFollower
@@ -36,7 +36,6 @@ public class PathAction(
     }
 
     public override fun start() {
-        Logger.tag("ACTIONS").info("Starting path action!" as Any)
         mPathfollower.reset()
     }
 
@@ -56,7 +55,6 @@ public class PathAction(
     }
 
     public override fun finish() {
-        Logger.tag("ACTIONS").info("Finishing path action!" as Any)
         drivetrain.setVelocity(path.endVelocity, path.endVelocity)
     }
 }

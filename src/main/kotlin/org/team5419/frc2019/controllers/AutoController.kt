@@ -10,15 +10,15 @@ import org.team5499.frc2019.auto.Routines
 import org.team5499.frc2019.subsystems.Vision.LEDState
 import org.team5499.frc2019.subsystems.Vision.VisionMode
 
-import org.team5499.dashboard.StringChooser
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser
 
 public class AutoController(subsystems: SubsystemsManager, routines: Routines) : Controller() {
 
     private val mSubsystems: SubsystemsManager
     private val mRoutines: Routines
 
-    private val mAutoSelector: StringChooser
-    private val mAllianceSelector: StringChooser
+    private val mAutoSelector: SendableChooser<Routine>
+    // private val mAllianceSelector: StringChooser
 
     private var currentRoutine: Routine
     private var currentAction: Action?
@@ -28,29 +28,34 @@ public class AutoController(subsystems: SubsystemsManager, routines: Routines) :
     init {
         mSubsystems = subsystems
         mRoutines = routines
+        mAutoSelector = SendableChooser<Routine>()
 
         isFinished = false
         currentRoutine = mRoutines.baseline
         currentAction = null
-        val tempArray = Array<String>(mRoutines.routineMap.size, { "" })
-        var i = 0
-        for ((key, _) in mRoutines.routineMap) {
-            tempArray.set(i, key)
-            i++
-        }
+        // val tempArray = Array<String>(mRoutines.routineMap.size, { "" })
+        // var i = 0
+        // for ((key, _) in mRoutines.routineMap) {
+        //     mAutoSelector.addOption(mRoutines.routineMap[i].name, mRoutines.routineMap[i])
+        //     i++
+        // }
 
-        @Suppress("SpreadOperator")
-        mAutoSelector = StringChooser("AUTO_MODE", "baseline", *tempArray)
-        mAllianceSelector = StringChooser("ALLIANCE_COLOR", "Blue", "Blue", "Red", "None")
+        // @Suppress("SpreadOperator")
+
+        // mAutoSelector = SendableChooser("AUTO_MODE", "baseline", *tempArray)
+        // mRoutines.forEach(
+        //     { mAutoSelector.addOption(it.name, it) }
+        // )
+
+        // mAllianceSelector = StringChooser("ALLIANCE_COLOR", "Blue", "Blue", "Red", "None")
     }
 
     public override fun start() {
-        // TODO choose routine from dashboard
         println("auto controller starting")
         reset()
-        val routine = mRoutines.getRoutineWithName(mAutoSelector.selected)
-        currentRoutine = if (routine == null) mRoutines.baseline else routine
-        // currentRoutine = mRoutines.rocketRight
+        // val routine = mRoutines.getRoutineWithName(mAutoSelector.selected)
+        // currentRoutine = if (routine == null) mRoutines.baseline else routine
+        currentRoutine = mRoutines.test
         mSubsystems.drivetrain.brakeMode = true
         mSubsystems.vision.ledState = LEDState.ON
         mSubsystems.vision.visionMode = VisionMode.VISION

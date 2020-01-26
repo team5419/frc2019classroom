@@ -4,7 +4,7 @@ import org.team5499.frc2019.subsystems.Lift
 import org.team5499.frc2019.subsystems.Lift.LiftHeight
 import org.team5499.monkeyLib.auto.Action
 
-import org.tinylog.Logger
+
 
 /**
  * An action that sets the elevator to a certain height.
@@ -21,7 +21,6 @@ public class LiftAction(
     public constructor(height: LiftHeight, lift: Lift): this(height.carriageHeightInches(), lift)
 
     public override fun start() {
-        Logger.tag("ACTIONS").info("Starting lift action!" as Any)
         lift.setCarriagePosition(inches)
     }
 

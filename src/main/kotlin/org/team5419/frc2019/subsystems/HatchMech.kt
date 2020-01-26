@@ -8,8 +8,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice
 import com.ctre.phoenix.motorcontrol.NeutralMode
 import com.ctre.phoenix.motorcontrol.ControlMode
 
-import org.team5499.dashboard.Dashboard
-
 public class HatchMech(talon: LazyTalonSRX) : Subsystem() {
 
     public enum class HatchMechPosition(val ticks: () -> Int) {
@@ -44,28 +42,28 @@ public class HatchMech(talon: LazyTalonSRX) : Subsystem() {
         mPositionOffset = Constants.Hatch.POSITION_OFFSET
         // mDisabled = false
 
-        Dashboard.addInlineListener("Constants.Hatch.KP") {
-            _: String, value: Double? ->
-            if (value != null)
-                mTalon.config_kP(0, value, 0)
-        }
-        Dashboard.addInlineListener("Constants.Hatch.KI") {
-            _: String, value: Double? ->
-            if (value != null)
-                mTalon.config_kP(0, value, 0)
-        }
-        Dashboard.addInlineListener("Constants.Hatch.KD") {
-            _: String, value: Double? ->
-            if (value != null)
-                mTalon.config_kP(0, value, 0)
-        }
+        // Dashboard.addInlineListener("Constants.Hatch.KP") {
+        //     _: String, value: Double? ->
+        //     if (value != null)
+        //         mTalon.config_kP(0, value, 0)
+        // }
+        // Dashboard.addInlineListener("Constants.Hatch.KI") {
+        //     _: String, value: Double? ->
+        //     if (value != null)
+        //         mTalon.config_kP(0, value, 0)
+        // }
+        // Dashboard.addInlineListener("Constants.Hatch.KD") {
+        //     _: String, value: Double? ->
+        //     if (value != null)
+        //         mTalon.config_kP(0, value, 0)
+        // }
 
-        Dashboard.addInlineListener("Constants.Hatch.POSITION_OFFSET") {
-            _: String, value: Int? ->
-            if (value != null) {
-                mPositionOffset = value
-            }
-        }
+        // Dashboard.addInlineListener("Constants.Hatch.POSITION_OFFSET") {
+        //     _: String, value: Int? ->
+        //     if (value != null) {
+        //         mPositionOffset = value
+        //     }
+        // }
     }
 
     public fun setPositionRaw(ticks: Int) {

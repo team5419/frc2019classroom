@@ -19,6 +19,7 @@ import org.team5499.frc2019.auto.actions.CrossedXBoundaryAction
 import org.team5499.frc2019.auto.actions.TurnAction
 import org.team5499.frc2019.auto.actions.VisionGoalAction
 import org.team5499.frc2019.auto.actions.VisionGoalAction.VisionGoal
+import org.team5499.frc2019.auto.actions.DriveStraightAction
 
 import java.util.LinkedHashMap
 
@@ -264,11 +265,12 @@ public class Routines(paths: Paths, subsystems: SubsystemsManager) {
     private fun createTest() = Routine(
         "test",
         Pose2d(Vector2(0, 0), Rotation2d.fromDegrees(0)),
-        WaitForLiftZeroAction(mSubsystems.lift),
-        LiftAction(LiftHeight.HATCH_LOW, mSubsystems.lift),
-        HatchMechAction(HatchMechPosition.HOLD, mSubsystems.hatchMech),
-        VisionGoalAction(120.0, VisionGoal.HATCH_TARGET, mSubsystems.vision, mSubsystems.drivetrain),
-        HatchMechAction(HatchMechPosition.DEPLOYED, mSubsystems.hatchMech)
+        DriveStraightAction(15.0, 50.0, mSubsystems.drivetrain)
+        // WaitForLiftZeroAction(mSubsystems.lift),
+        // LiftAction(LiftHeight.HATCH_LOW, mSubsystems.lift),
+        // HatchMechAction(HatchMechPosition.HOLD, mSubsystems.hatchMech),
+        // VisionGoalAction(120.0, VisionGoal.HATCH_TARGET, mSubsystems.vision, mSubsystems.drivetrain),
+        // HatchMechAction(HatchMechPosition.DEPLOYED, mSubsystems.hatchMech)
     )
 
     private fun createNothing() = Routine(

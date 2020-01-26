@@ -1,13 +1,10 @@
 package org.team5499.frc2019
 
-import org.team5499.dashboard.DashboardVar
+
 
 @SuppressWarnings("MagicNumber")
 public object Constants {
 
-    fun initConstants() {
-        DashboardVar.initClassProps(Constants::class)
-    }
 
     public const val ROBOT_UPDATE_PERIOD = 0.02 // maybe change back to 0.005
     public const val TALON_UPDATE_PERIOD_MS = 10
@@ -56,51 +53,51 @@ public object Constants {
         public const val WHEEL_CIR = WHEEL_DIAMETER * Math.PI
 
         // pid thresholds
-        public var MAX_VELOCITY by DashboardVar(100.0) // inches per second
-        public var MAX_ACCELERATION by DashboardVar(50.0) // inches per second^2
-        public var ACCEPTABLE_VELOCITY_THRESHOLD by DashboardVar(3.0) // inches / s
-        public var ACCEPTABLE_TURN_ERROR by DashboardVar(3.0) // degrees (?)
-        public var ACCEPTABLE_DISTANCE_ERROR by DashboardVar(2.0) // inches
+        public var MAX_VELOCITY = 100.0 // inches per second
+        public var MAX_ACCELERATION = 50.0 // inches per second^2
+        public var ACCEPTABLE_VELOCITY_THRESHOLD = 3.0 // inches / s
+        public var ACCEPTABLE_TURN_ERROR = 3.0 // degrees (?)
+        public var ACCEPTABLE_DISTANCE_ERROR = 2.0 // inches
 
         // pid constants
-        public var VEL_KP by DashboardVar(1.3)
-        public var VEL_KI by DashboardVar(0.0)
-        public var VEL_KD by DashboardVar(0.6)
-        public var VEL_KF by DashboardVar(0.6)
-        public var VEL_IZONE by DashboardVar(10)
-        public var VEL_MAX_OUTPUT by DashboardVar(1.0)
+        public var VEL_KP = 1.3
+        public var VEL_KI = 0.0
+        public var VEL_KD = 0.6
+        public var VEL_KF = 0.6
+        public var VEL_IZONE = 10
+        public var VEL_MAX_OUTPUT = 1.0
 
-        public var POS_KP by DashboardVar(0.8)
-        public var POS_KI by DashboardVar(0.0)
-        public var POS_KD by DashboardVar(0.2)
-        public var POS_KF by DashboardVar(0.0)
-        public var POS_IZONE by DashboardVar(10)
-        public var POS_MAX_OUTPUT by DashboardVar(0.5)
+        public var POS_KP = 0.8
+        public var POS_KI = 0.0
+        public var POS_KD = 0.2
+        public var POS_KF = 0.0
+        public var POS_IZONE = 10
+        public var POS_MAX_OUTPUT = 0.5
 
-        public var ANGLE_KP by DashboardVar(2.0)
-        public var ANGLE_KI by DashboardVar(0.0)
-        public var ANGLE_KD by DashboardVar(0.0)
-        public var ANGLE_KF by DashboardVar(0.0)
-        public var ANGLE_IZONE by DashboardVar(10)
-        public var ANGLE_MAX_OUTPUT by DashboardVar(1.0)
+        public var ANGLE_KP = 2.0
+        public var ANGLE_KI = 0.0
+        public var ANGLE_KD = 0.0
+        public var ANGLE_KF = 0.0
+        public var ANGLE_IZONE = 10
+        public var ANGLE_MAX_OUTPUT = 1.0
 
-        public var TURN_KP by DashboardVar(0.1)
-        public var TURN_KI by DashboardVar(0.0)
-        public var TURN_KD by DashboardVar(0.0)
-        public var TURN_KF by DashboardVar(0.0)
-        public var TURN_IZONE by DashboardVar(10)
-        public var TURN_MAX_OUTPUT by DashboardVar(1.0)
+        public var TURN_KP = 0.1
+        public var TURN_KI = 0.0
+        public var TURN_KD = 0.0
+        public var TURN_KF = 0.0
+        public var TURN_IZONE = 10
+        public var TURN_MAX_OUTPUT = 1.0
 
-        public var FIXED_KP by DashboardVar(0.0)
-        public var FIXED_KI by DashboardVar(0.0)
-        public var FIXED_KD by DashboardVar(0.0)
-        public var FIXED_KF by DashboardVar(0.0)
-        public var FIXED_IZONE by DashboardVar(10)
-        public var FIXED_MAX_OUTPUT by DashboardVar(0.5)
+        public var FIXED_KP = 0.0
+        public var FIXED_KI = 0.0
+        public var FIXED_KD = 0.0
+        public var FIXED_KF = 0.0
+        public var FIXED_IZONE = 10
+        public var FIXED_MAX_OUTPUT = 0.5
 
-        public var INVERT_FIXED_AUX_PIDF by DashboardVar(true)
-        public var INVERT_ANGLE_AUX_PIDF by DashboardVar(true)
-        public var INVERT_TURN_AUX_PIDF by DashboardVar(false)
+        public var INVERT_FIXED_AUX_PIDF = true
+        public var INVERT_ANGLE_AUX_PIDF = true
+        public var INVERT_TURN_AUX_PIDF = false
     }
 
     object Lift {
@@ -109,26 +106,26 @@ public object Constants {
         public const val SLAVE_TALON_PORT = 5
 
         // pid
-        public var KP by DashboardVar(0.7) // worked a 0.09
-        public var KI by DashboardVar(0.0)
-        public var KD by DashboardVar(0.0)
-        public var KF by DashboardVar(0.0)
+        public var KP = 0.7   // worked a 0.09
+        public var KI = 0.0
+        public var KD = 0.0
+        public var KF = 0.0
 
         public const val MOTION_MAGIC_VELOCITY = 11000 // 10500 before
         public const val MOTION_MAGIC_ACCELERATION = 11000 // 9000 before
 
         // heights (carriage height in inches)
-        public val ROCKET_HOLE_SPACING by DashboardVar(27.0)
-        public var STOW_HEIGHT by DashboardVar(3.5)
+        public val ROCKET_HOLE_SPACING = 27.0
+        public var STOW_HEIGHT = 3.5
 
-        public var HATCH_LOW_HEIGHT by DashboardVar(7.0)
-        public val HATCH_MID_HEIGHT by DashboardVar(34.5)
-        public val HATCH_HIGH_HEIGHT by DashboardVar(60.5)
+        public var HATCH_LOW_HEIGHT = 7.0
+        public val HATCH_MID_HEIGHT = 34.5
+        public val HATCH_HIGH_HEIGHT = 60.5
 
-        public var BALL_LOW_HEIGHT by DashboardVar(3.5) // 4.5
-        public val BALL_MID_HEIGHT by DashboardVar(30.0) // 32
-        public val BALL_HIGH_HEIGHT by DashboardVar(57.0) // 58
-        public var BALL_HUMAN_PLAYER_HEIGHT by DashboardVar(20.0)
+        public var BALL_LOW_HEIGHT = 3.5   // 4.5
+        public val BALL_MID_HEIGHT = 30.0   // 32
+        public val BALL_HIGH_HEIGHT = 57.0   // 58
+        public var BALL_HUMAN_PLAYER_HEIGHT = 20.0
 
         // constants
         public const val ENCODER_REDUCTION = 38.0 / 24.0 // reduction from encoder shaft to output shaft
@@ -162,47 +159,47 @@ public object Constants {
     object Hatch {
         public const val TALON_PORT = 10
 
-        public var KP by DashboardVar(3.5)
-        public var KI by DashboardVar(0.0)
-        public var KD by DashboardVar(0.5)
+        public var KP = 3.5
+        public var KI = 0.0
+        public var KD = 0.5
 
         // positions, all in pot ticks
-        public var POSITION_OFFSET by DashboardVar(140)
+        public var POSITION_OFFSET = 140
 
-        public var TOP_STOW_POSITION by DashboardVar(0)
-        public var BOTTOM_STOW_POSITION by DashboardVar(770)
-        public var DEPLOY_POSITION by DashboardVar(360)
-        public var HOLD_POSITION by DashboardVar(170)
+        public var TOP_STOW_POSITION = 0
+        public var BOTTOM_STOW_POSITION = 770
+        public var DEPLOY_POSITION = 360
+        public var HOLD_POSITION = 170
     }
 
     object Vision {
-        public var CAMERA_HEIGHT by DashboardVar(33.0)
-        public var CAMERA_VERTICAL_ANGLE by DashboardVar(0.0)
-        public var CAMERA_HORIZONTAL_ANGLE by DashboardVar(7.0)
-        public var HATCH_TARGET_HEIGHT by DashboardVar(29.0)
-        public var BALL_TARGET_HEIGHT by DashboardVar(36.0)
+        public var CAMERA_HEIGHT = 33.0
+        public var CAMERA_VERTICAL_ANGLE = 0.0
+        public var CAMERA_HORIZONTAL_ANGLE = 7.0
+        public var HATCH_TARGET_HEIGHT = 29.0
+        public var BALL_TARGET_HEIGHT = 36.0
 
-        public var TARGET_DISTANCE by DashboardVar(24.0) // inches
+        public var TARGET_DISTANCE = 24.0   // inches
 
-        public var ACCEPTABLE_ANGLE_ERROR by DashboardVar(3.0) // degrees(?)
-        public var ACCEPTABLE_DISTANCE_ERROR by DashboardVar(2.0) // inches (?)
+        public var ACCEPTABLE_ANGLE_ERROR = 3.0   // degrees(?
+        public var ACCEPTABLE_DISTANCE_ERROR = 2.0   // inches (?
 
-        public var ANGLE_KP by DashboardVar(1.0)
-        public var ANGLE_KI by DashboardVar(0.0)
-        public var ANGLE_KD by DashboardVar(0.1)
-        public var ANGLE_KF by DashboardVar(0.0)
+        public var ANGLE_KP = 1.0
+        public var ANGLE_KI = 0.0
+        public var ANGLE_KD = 0.1
+        public var ANGLE_KF = 0.0
 
-        public var DISTANCE_KP by DashboardVar(0.35)
-        public var DISTANCE_KI by DashboardVar(0.0)
-        public var DISTANCE_KD by DashboardVar(0.0)
-        public var DISTANCE_KF by DashboardVar(0.0)
+        public var DISTANCE_KP = 0.35
+        public var DISTANCE_KI = 0.0
+        public var DISTANCE_KD = 0.0
+        public var DISTANCE_KF = 0.0
     }
 
     object Auto {
         fun initProps() {
             println("init Auto")
         }
-        public var AUTO_DELAY by DashboardVar(0.0) // seconds, set this from dashboard
-        public var LOOKAHEAD_DISTANCE by DashboardVar(18.0)
+        public var AUTO_DELAY = 0.0   // seconds, set this from dashboard
+        public var LOOKAHEAD_DISTANCE = 18.0
     }
 }

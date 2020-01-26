@@ -2,7 +2,7 @@ package org.team5499.frc2019.auto.actions
 
 import org.team5499.frc2019.subsystems.Drivetrain
 
-import org.tinylog.Logger
+
 import org.team5499.monkeyLib.auto.Action
 import org.team5499.monkeyLib.math.geometry.Vector2
 
@@ -22,7 +22,7 @@ class CrossedIntoBoxAction(
 ) : Action(0.0) {
 
     public override fun start() {
-        Logger.tag("ACTIONS").info("Starting box boundary action!" as Any)
+
     }
 
     override fun next(): Boolean {

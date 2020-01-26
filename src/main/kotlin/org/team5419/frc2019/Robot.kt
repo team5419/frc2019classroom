@@ -29,11 +29,9 @@ import org.team5499.frc2019.input.ButtonBoardCodriver
 import org.team5499.frc2019.auto.Paths
 import org.team5499.frc2019.auto.Routines
 
-import org.team5499.dashboard.Dashboard
-
 import com.ctre.phoenix.sensors.PigeonIMU
 
-import org.tinylog.Logger
+
 
 class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     // inputs
@@ -87,9 +85,6 @@ class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     private val mAutoController: AutoController
 
     init {
-        // init dashboard
-        Dashboard.start(this, "dashConfig.json")
-        Constants.initConstants()
 
         // inputs init
         mDriver = XboxController(Constants.Input.DRIVER_PORT)
@@ -175,30 +170,14 @@ class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     }
 
     override fun robotInit() {
-        Logger.warn("Robot initializing" as Any)
         mVision.ledState = Vision.LEDState.OFF
         mVision.visionMode = Vision.VisionMode.VISION
     }
 
     override fun robotPeriodic() {
-        Logging.update(mSubsystemsManager,
-                        mPdp,
-                        mControlBoard,
-                        mLeftMaster,
-                        mLeftSlave1,
-                        mLeftSlave2,
-                        mRightMaster,
-                        mRightSlave1,
-                        mRightSlave2,
-                        mLiftMaster,
-                        mLiftSlave,
-                        mIntakeTalon,
-                        mHatchMechTalon)
-        Dashboard.update()
     }
 
     override fun disabledInit() {
-        Logger.warn("Robot disabling" as Any)
         mLift.zeroed = false
         // mVision.initialize()
         mVision.ledState = Vision.LEDState.OFF
@@ -211,7 +190,6 @@ class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     }
 
     override fun autonomousInit() {
-        Logger.warn("Robot going autonomous" as Any)
         mSubsystemsManager.resetAll()
         mTeleopController.reset()
         mSandstormController.reset()
@@ -224,7 +202,6 @@ class Robot : TimedRobot(Constants.ROBOT_UPDATE_PERIOD) {
     }
 
     override fun teleopInit() {
-        Logger.warn("Robot going teleoperated" as Any)
         mTeleopController.start()
     }
 
