@@ -60,7 +60,7 @@ object DriveConstants {
     val kMoi = kMass * 0.46 * 0.46 // kg * m^2
     val kAngularDrag = 10.0 // (N * m) / (rad / s)  TUNE ME
 
-    val kTicksPerRotation = 4092.nativeUnits
+    val kTicksPerRotation = 4096.nativeUnits
     val kPigeonConversion = (3600.0 / 8192.0).nativeUnits
 
     const val kLeftDriveKv = 1.71

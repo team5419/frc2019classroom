@@ -9,86 +9,76 @@ import org.team5419.fault.auto.DriveTrajectoryAction
 import org.team5419.fault.auto.DriveStraightAction
 import org.team5419.fault.math.units.*
 import org.team5419.fault.math.units.derived.*
-import org.team5419.fault.math.geometry.Pose2d
-import org.team5419.fault.math.geometry.Vector2d
 import org.team5419.fault.math.geometry.Pose2dWithCurvature
-import org.team5419.fault.trajectory.types.TimedTrajectory
-import org.team5419.fault.trajectory.TrajectoryGenerator
-import org.team5419.fault.trajectory.DefaultTrajectoryGenerator
-import org.team5419.fault.trajectory.constraints.*
 import org.team5419.frc2019.subsystems.Drivetrain
-import org.team5419.fault.input.DriveHelper
 import org.team5419.fault.input.SpaceDriveHelper
 import com.ctre.phoenix.motorcontrol.ControlMode
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics
+import edu.wpi.first.wpilibj.trajectory.*
+import edu.wpi.first.wpilibj.controller.*
+import edu.wpi.first.wpilibj.geometry.*
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds
+import edu.wpi.first.wpilibj.Timer
+
 @SuppressWarnings("MagicNumber")
 class Robot : TimedRobot() {
-    private val mXboxController: XboxController = XboxController(0)
-    val trajectoryGenerator: TrajectoryGenerator = DefaultTrajectoryGenerator
-    val controller = XboxController(0)
-    private val kMaxVelocity = 10.feet.velocity
-    private val kMaxAcceleration = 2.feet.acceleration
-    private val kMaxHabVelocity = 2.feet.velocity
-    private val kFirstPathVMaxAcceleration = 6.feet.velocity
-    private val kVelocityRadiusConstraintRadius = 3.feet
-    private val kVelocityRadiusConstraintVelocity = 3.feet.velocity
-    private val kMaxCentripetalAcceleration = 9.feet.acceleration
-    private val kMaxVoltage = 10.volts
+    val xboxController = XboxController(0)
 
-    private val driveHelper: DriveHelper = SpaceDriveHelper(
-        { controller.getY(Hand.kLeft) },
-        { controller.getX(Hand.kRight) },
-        { controller.getBumper(Hand.kLeft) },
-        { controller.getBumper(Hand.kRight) }
+    val ks = 2.17
+    val kv = 0.041
+    val ka = 0.0279
+    val r2 = 0.997
+    val kt = 2.77
+    val kd = 1.4
+
+    private val driveHelper = SpaceDriveHelper(
+        { xboxController.getY(Hand.kLeft) },
+        { xboxController.getX(Hand.kRight) },
+        { xboxController.getBumper(Hand.kLeft) },
+        { xboxController.getBumper(Hand.kRight) }
     )
 
-    val trajectory: TimedTrajectory<Pose2dWithCurvature> = trajectoryGenerator.generateTrajectory(
-        listOf(
-            Pose2d(3.0.feet, 0.0.feet),
-            Pose2d(6.0.feet, 0.0.feet)
+    private val kMaxVelocity = 3.0
+    private val kMaxAcceleration = 3.0
+
+    val config = TrajectoryConfig( kMaxVelocity, kMaxAcceleration )
+
+    val trajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        Pose2d(0.0, 0.0, Rotation2d(0.0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        listOf<Translation2d>(
+            // Translation2d(1.0, 1.0),
+            // Translation2d(2.0, -1.0)
         ),
-        listOf<TimingConstraint<Pose2dWithCurvature>>(
-            // CentripetalAccelerationConstraint(kMaxCentripetalAcceleration),
-            // VelocityLimitRadiusConstraint(
-            //     Vector2d(10.feet, 10.feet),
-            //     kVelocityRadiusConstraintRadius,
-            //     kVelocityRadiusConstraintVelocity
-            // ),
-            // DifferentialDriveDynamicsConstraint(DriveConstants.kDriveModel, kMaxVoltage)
-        ),
-        0.0.feet.velocity,
-        0.0.feet.velocity,
-        TrajectoryConstants.kMaxVelocity,
-        TrajectoryConstants.kMaxAcceleration,
-        true
+        // End 3 meters straight ahead of where we started, facing forward
+        Pose2d(0.0, -3.0, Rotation2d(0.0)),
+        // Pass config
+        config
     )
 
-    var routine = generateRoutines()
+    val controller = RamseteController(DriveConstants.kBeta, DriveConstants.kZeta)
 
-    fun generateRoutines(): Routine {
-        val trajectoryRoutine: Routine = Routine(
-            "default",
-            Pose2d(),
-            DriveTrajectoryAction(Drivetrain, Drivetrain.trajectoryFollower, trajectory)
-        )
-        val driveStraightRoutine = Routine(
-            "drive straight",
-            Pose2d(),
-            DriveStraightAction(Drivetrain, 5.feet)
-        )
-        return trajectoryRoutine
-    }
+    val differentialDriveKinematics = DifferentialDriveKinematics(
+        DriveConstants.kTrackWidth.inMeters()
+    )
 
-    override fun robotInit() {
-    }
+    val feedforward = SimpleMotorFeedforward( ka, ks, kv )
+
+    var prevTime = 0.0
+    var prevSpeed = DifferentialDriveWheelSpeeds(0.0, 0.0)
+
+    val timer = Timer()
+
+    override fun robotInit() {}
 
     override fun robotPeriodic() {
-        println(
-            // "angle: " + Drivetrain.robotPosition.rotation.degree.toString() + "\n" +
-            "left: " + Drivetrain.leftDistance.inFeet().toString() + "\n" +
-            "right: " + Drivetrain.rightDistance.inFeet().toString()
-        )
         Drivetrain.periodic()
+
+        println( "angle: " + Drivetrain.angle.degree )
+        println( "left distance: " + Drivetrain.leftDistance.inMeters() )
+        println( "right distance: " + Drivetrain.rightDistance.inMeters() )
     }
 
     override fun disabledInit() {
@@ -98,23 +88,61 @@ class Robot : TimedRobot() {
     override fun disabledPeriodic() {}
 
     override fun autonomousInit() {
-        println("start routine")
-        routine = generateRoutines()
-        routine.start()
+        timer.start()
     }
 
     override fun autonomousPeriodic() {
-        routine.update()
-        // println(
-        //     "left error: " + Drivetrain.leftMasterMotor.motorController.getClosedLoopError(0) + "\n" +
-        //     "right error: " + Drivetrain.rightMasterMotor.motorController.getClosedLoopError(0)
-        // )
+        val time = timer.get()
+        val dt = time - prevTime
+
+        prevTime = time
+
+        val chassisSpeed = controller.calculate(
+            Pose2d(
+                Drivetrain.leftDistance.inMeters(),
+                Drivetrain.rightDistance.inMeters(),
+                Rotation2d( Drivetrain.angle.radian.value )
+            ),
+            trajectory.sample(time)
+        )
+
+        val out = differentialDriveKinematics.toWheelSpeeds( chassisSpeed )
+
+        val leftSpeedSetpoint = out.leftMetersPerSecond
+        val rightSpeedSetpoint = out.rightMetersPerSecond
+
+        val leftFeedForward = feedforward.calculate(
+            leftSpeedSetpoint,
+            (leftSpeedSetpoint - prevSpeed.leftMetersPerSecond) / dt
+        )
+
+        val rightFeedForward = feedforward.calculate(
+            rightSpeedSetpoint,
+            (rightSpeedSetpoint - prevSpeed.rightMetersPerSecond) / dt
+        )
+
+        prevSpeed = out
+
+        Drivetrain.setVelocity(
+            out.leftMetersPerSecond.meters.velocity,
+            out.rightMetersPerSecond.meters.velocity,
+            leftFeedForward.volts,
+            rightFeedForward.volts
+        )
+
+        println( "target right velocity: " + out.rightMetersPerSecond )
+        println( "target left velocity: " + out.leftMetersPerSecond )
+        println( "target linear velocity: " + chassisSpeed.vxMetersPerSecond )
+        println( "target angular velocity: " + chassisSpeed.omegaRadiansPerSecond )
     }
 
     override fun teleopInit() {
     }
 
     override fun teleopPeriodic() {
-        Drivetrain.setPercent(driveHelper.output())
+        Drivetrain.setPercent(
+            xboxController.getY(Hand.kLeft),
+            xboxController.getY(Hand.kRight)
+        )
     }
 }

@@ -52,14 +52,15 @@ object Drivetrain : AbstractTankDrive() {
     private val gyro = PigeonIMU(DriveConstants.kGyroPort)
 
     init {
-        leftSlave.follow(leftMasterMotor)
-        rightSlave.follow(rightMasterMotor)
+        // leftSlave.follow(leftMasterMotor)
+        // rightSlave.follow(rightMasterMotor)
 
-        leftSlave.talonSRX.setInverted(InvertType.FollowMaster)
+        // leftSlave.talonSRX.setInverted(InvertType.FollowMaster)
         leftMasterMotor.outputInverted = true
 
-        rightSlave.talonSRX.setInverted(InvertType.FollowMaster)
+        // rightSlave.talonSRX.setInverted(InvertType.FollowMaster)
         rightMasterMotor.outputInverted = false
+
 
         leftMasterMotor.talonSRX.configSelectedFeedbackSensor(
             FeedbackDevice.CTRE_MagEncoder_Relative, kPositionSlot, 0
@@ -111,7 +112,8 @@ object Drivetrain : AbstractTankDrive() {
         rightMasterMotor.motionProfileCruiseVelocity = DriveConstants.kMotionMagicVelocity
         rightMasterMotor.motionProfileAcceleration = DriveConstants.kMotionMagicAcceleration
 
-        isBraking = false
+
+        isBraking = true
         gyro.setFusedHeading(0.0)
 
         localization.reset()
